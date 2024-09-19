@@ -1,5 +1,5 @@
 # MHSystem
-
+bbbbb
 定数
 	会社CD
 		NTPS = 1
