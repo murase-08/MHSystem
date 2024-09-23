@@ -1,6 +1,11 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
+<<<<<<< HEAD
+=======
+from Murase import Murase
+
+>>>>>>> origin/main
 class MHSystemGUI:
     def __init__(self, master):
         self.master = master
@@ -43,8 +48,12 @@ class MHSystemGUI:
         	
         # ポップアップ出力（おわったよ。差異無いよ。三日分違うよ（9/10,9/11,9/12））
         difference_days = ["9/10", "9/11", "9/12"]
+<<<<<<< HEAD
         output_message = f"処理が完了しました。\n差異{len(difference_days)}件\n{difference_days}"
         messagebox.showinfo(output_message)
+=======
+        messagebox.showinfo(Murase.output_message(difference_days))
+>>>>>>> origin/main
 
 
 if __name__ == "__main__":
