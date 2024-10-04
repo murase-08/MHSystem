@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from Murase import Murase
 from Higuchi import Higuchi
+
 class MHSystemGUI:
     def __init__(self, master):
         self.master = master
@@ -72,7 +73,7 @@ class MHSystemGUI:
         # ジョブカンファイルを取得
         self.jobkan_file_path = Murase.Call_Jobkan_Path() + self.employee_name + ".pdf"
         # ジョブカンデータ読み込み(会社CD:0)
-        Higuchi.read_pdf(Murase.Call_Campany("ITCROSS"), self.jobkan_file_path)
+        Higuchi.read_pdf(Murase.Call_Campany_CD("ITCROSS"), self.jobkan_file_path)
         
         # 二次元配列→クラスへ
         

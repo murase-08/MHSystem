@@ -26,7 +26,7 @@ def Check_Company(file_name):
     return Call_Campany("TOKYO_IT_SCHOOL")
 
 # 会社コードを取得
-def Call_Campany(company_name):
+def Call_Campany_CD(company_name):
     with open('Config.json', 'r') as config_file:
         config = json.load(config_file)
     company_codes = config['company_code']
