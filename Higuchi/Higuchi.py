@@ -4,7 +4,8 @@ import pandas as pd
 # 各社会社PDF読み込み関数
 # 各会社の勤怠情報を読み込み、リストとして出力します
 def read_pdf(company_code, pdf_path):
-    
+    # 中にある関数を外に出して可読性をあげる
+    # switch caseを使う
     # 株式会社システムシェアードのPDF読み込み関数
     if company_code == 1:
         def read_systemshared_pdf(pdf_path):

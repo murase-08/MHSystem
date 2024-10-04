@@ -66,7 +66,7 @@ class MHSystemGUI:
         company_code = Murase.Check_Company(self.file_name)
 
         # 各社　pdf読み込み　→　フォーマット合わせが目的
-        Higuchi.read_pdf(company_code, self.file_path)
+        Higuchi.read_pdf(1, self.file_path)
         
 
         # ジョブカンファイルを取得
