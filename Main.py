@@ -1,11 +1,16 @@
 import json
 import tkinter as tk
 from tkinter import filedialog, messagebox
+<<<<<<< Updated upstream
 
 from Higuchi import Higuchi
 from Murase import Murase
 
 
+=======
+from Murase import Murase
+from Higuchi import Higuchi
+>>>>>>> Stashed changes
 class MHSystemGUI:
     def __init__(self, master):
         self.master = master
@@ -61,6 +66,7 @@ class MHSystemGUI:
 
     # 実行ボタンの処理
     def run_process(self):
+<<<<<<< Updated upstream
 
         if(self.file_path == None):
             messagebox.showerror("エラー", "ファイルが選択されていません")
@@ -94,6 +100,23 @@ class MHSystemGUI:
         difference_days = ["9/10", "9/11", "9/12"]
         messagebox.showinfo(Murase.output_message(difference_days))
 
+=======
+        # ここに処理を実装する
+        	# 会社判別
+        	# 各社　pdf読み込み　→　フォーマット合わせが目的
+            Higuchi.read_pdf(4,self.file_path)
+        	# ジョブカンデータ読み込み
+        	# 二次元配列→クラスへ
+        	# 最終サニタイズ　→　時刻を丸める（８;５１　→　９：００）
+        	# 比較　完全一致比較
+        	# ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
+        	# クラス→二次元配列
+        	# 出力
+        	
+        # ポップアップ出力（おわったよ。差異無いよ。三日分違うよ（9/10,9/11,9/12））
+    difference_days = ["9/10", "9/11", "9/12"]
+    messagebox.showinfo(Murase.output_message(difference_days))
+>>>>>>> Stashed changes
 
 if __name__ == "__main__":
     root = tk.Tk()
