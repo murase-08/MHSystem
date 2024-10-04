@@ -36,8 +36,11 @@ def Call_Campany_CD(company_name):
 def Call_Company_Name(company_name):
     with open('Config.json', 'r') as config_file:
         config = json.load(config_file)
-    company_names = config['company_name']
-    return company_names[company_name]
+    company_codes = config['company_code']
+    for code, name in company_codes.items():
+        if name == company_name:
+            return code
+    return None  # Return None if the company name is not found
 
 # ジョブカンファイルのパスを取得
 def Call_Jobkan_Path():

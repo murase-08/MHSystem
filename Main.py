@@ -21,23 +21,20 @@ class MHSystemGUI:
         # Config.jsonから会社名を読み込む
         with open('Config.json', 'r') as config_file:
             config = json.load(config_file)
-        companies = list(config['company_name'].values())
+        companies = list(config['company_code'].keys())
 
         # 会社名選択用のドロップダウン
-        self.company_frame = tk.LabelFrame(self.main_frame, text="会社名選択")
+        self.company_frame = tk.LabelFrame(self.main_frame, text="会社名選択", font=("MS Gothic", 10))
         self.company_frame.pack(pady=10, fill=tk.X)
 
+        # 日本語の文字化けを防ぐため、フォントを指定
+        japanese_font = ("MS Gothic", 10)
         self.company_var = tk.StringVar(value=companies[0])
         self.company_dropdown = tk.OptionMenu(self.company_frame, self.company_var, *companies)
+        self.company_dropdown.config(font=japanese_font)
+        for item in self.company_dropdown['menu'].winfo_children():
+            item.configure(font=japanese_font)
         self.company_dropdown.pack(fill=tk.X)
-
-        # 社員名入力フィールド
-        self.name_frame = tk.Frame(self.main_frame)
-
-        self.name_frame.pack(pady=10, fill=tk.X)
-        tk.Label(self.name_frame, text="社員名:").pack(side=tk.LEFT)
-        self.name_entry = tk.Entry(self.name_frame)
-        self.name_entry.pack(side=tk.LEFT, expand=True, fill=tk.X)
 
         # 各社ファイル選択ボタン
         self.select_file_button = tk.Button(self.main_frame, text="各社PDFファイルを選択", command=self.select_file)
@@ -69,7 +66,6 @@ class MHSystemGUI:
         # 各社　pdf読み込み　→　フォーマット合わせが目的
         Higuchi.read_pdf(1, self.file_path)
         
-
         # ジョブカンファイルを取得
         self.jobkan_file_path = Murase.Call_Jobkan_Path() + self.employee_name + ".pdf"
         # ジョブカンデータ読み込み(会社CD:0)

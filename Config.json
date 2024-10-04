@@ -1,13 +1,8 @@
 {
     "company_code": {
         "ITCROSS": 0,
-        "TOKYO_IT_SCHOOL": 1,
+        "SYSTEM_SHARED": 1,
         "NTPS": 2
-    },
-    "company_name": {
-        "ITCROSS": "ITC",
-        "TOKYO_IT_SCHOOL": "東京ITスクール",
-        "NTPS": "NTPS"
     },
     "jobkan_file_path": "C:\\Users\\user\\Desktop\\jobkan\\"
 }
