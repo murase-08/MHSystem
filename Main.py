@@ -64,22 +64,24 @@ class MHSystemGUI:
         company_code = Murase.Check_Company(self.file_name)
 
         # 各社　pdf読み込み　→　フォーマット合わせが目的
+        # 戻り値 pandasデータフレーム
+        # 日付 datetime.date(yyyy,MM,dd) => yyyy-MM-dd
+        # 実働時間 H
+        # 開始時間 HH:mm
+        # 終了時間 HH:mm
+        # 休憩時間 H
+        # 備考 string
         Higuchi.read_pdf(8, self.file_path)
         
         # ジョブカンファイルを取得
         self.jobkan_file_path = Murase.Call_Jobkan_Path() + self.employee_name + ".pdf"
         # ジョブカンデータ読み込み(会社CD:0)
         Higuchi.read_pdf(Murase.Call_Campany_CD("ITCROSS"), self.jobkan_file_path)
-        
-        # 二次元配列→クラスへ
-        
-        # 最終サニタイズ　→　時刻を丸める（８;５１　→　９：００）
-        
-        # 比較　完全一致比較
+                        
+        # 比較　完全一致比較 日ごとの実働時間で比較
         
         # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
         file_name = Murase.Create_File_Name(self.employee_name, company_code)
-        # クラス→二次元配列
         
         # 出力
         Murase.output_csv()
