@@ -46,7 +46,14 @@ def read_systemshared_file(file_path):
                         }
                     )
     pdf_df = pd.DataFrame(data)
-    print(pdf_df)
+    result_df = pdf_df[['日付', '労働時間', '開始', '終了', '休憩時間', 'メモ']]
+    # カラム名を変更
+    result_df = result_df.rename(columns={
+        '開始': '開始時間',
+        '終了': '終了時間',
+        'メモ': '備考'
+    })
+    print(result_df)
 
 # TDIシステムサービス株式会社のPDF読み込み関数
 def read_tdisystem_file(file_path):
@@ -67,7 +74,19 @@ def read_tdisystem_file(file_path):
                         }
                     )
     pdf_df = pd.DataFrame(data)
-    print(pdf_df)
+    result_df = pdf_df[['日付', '実働時間','業務内容']]
+    # 空のカラムを追加（フォーマットを合わせるため）
+    result_df['開始時間'] = None
+    result_df['終了時間'] = None
+    result_df['休憩時間'] = None
+
+    # カラムの順番を調整
+    result_df = result_df[['日付','実働時間', '開始時間', '終了時間', '休憩時間', '業務内容']]
+    # カラム名を変更
+    result_df = result_df.rename(columns={
+        '業務内容': '備考'
+    })
+    print(result_df)
 
 # 株式会社システムサポートのPDF読み込み関数
 def read_systemsupport_file(file_path):
@@ -76,7 +95,6 @@ def read_systemsupport_file(file_path):
         page = pdf.pages[0]
         tables = page.extract_tables()
         for table in tables:
-            print("テーブル内容:", table[9:])
             for row in table[9:]:
                 if len(row) >= 6:
                     data.append(
@@ -91,9 +109,20 @@ def read_systemsupport_file(file_path):
                         }
                     )
     pdf_df = pd.DataFrame(data)
-    print(pdf_df)
+    result_df = pdf_df[['日', '作業時間','開始','終了','休憩',"作業内容"]]
+    # カラム名を変更
+    result_df = result_df.rename(columns={
+        '日': '日付',
+        '作業時間': '実働時間',
+        '開始': '開始時間',
+        '終了': '終了時間',
+        '休憩': '休憩時間',
+        '作業内容': '備考',
+    })
+    print(result_df)
 
 # 株式会社アイティークロスのPDF読み込み関数
+#未完成(完成していたが動かなくなった　原因不明)
 def read_itcross_file(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:
@@ -131,14 +160,19 @@ def read_tecnocreative_file(file_path):
         page = pdf.pages[0]
         tables = page.extract_tables()
         for table in tables:
-            for row in table[1:]:
-                data.append(
+            for row in table[2:]:
+                 data.append(
                     {
                         "日付": row[0],
-                        "開始": row[1],
-                        "終了": row[2],
-                        "提示": row[3],
-                        "残業": row[4],
+                        "開始": row[3],
+                        "終了": row[4],
+                        "休憩": row[5],
+                        "定時": row[8],
+                        "残業": row[9],
+                        "深夜": row[10],
+                        "休出": row[11],
+                        "届出": row[12],
+                        "備考": row[13],
                     }
                 )
     pdf_df = pd.DataFrame(data)

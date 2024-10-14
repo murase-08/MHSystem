@@ -59,7 +59,7 @@ class MHSystemGUI:
         if(self.file_path == None):
             messagebox.showerror("エラー", "ファイルが選択されていません")
             return
-        Higuchi.read_file(8, self.file_path)
+        Higuchi.read_file(5, self.file_path)
         # 会社判別
         company_code = Murase.Check_Company(self.file_name)
     
