@@ -49,7 +49,7 @@ class MHSystemGUI:
 
     # ファイル選択ボタンの処理
     def select_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("PDF files", "*.pdf")])
+        file_path = filedialog.askopenfilename(filetypes=[("PDF files", "*.pdf"), ("Excel files", "*.xlsx;*.xls")])
         if file_path:
             self.file_path = file_path
             self.result_text.insert(tk.END, f"選択されたファイル: {file_path}\n")
@@ -59,10 +59,10 @@ class MHSystemGUI:
         if(self.file_path == None):
             messagebox.showerror("エラー", "ファイルが選択されていません")
             return
-        
+        Higuchi.read_file(8, self.file_path)
         # 会社判別
         company_code = Murase.Check_Company(self.file_name)
-
+    
         # 各社　pdf読み込み　→　フォーマット合わせが目的
         # 戻り値 pandasデータフレーム
         # 日付 datetime.date(yyyy,MM,dd) => yyyy-MM-dd
@@ -71,7 +71,6 @@ class MHSystemGUI:
         # 終了時間 HH:mm
         # 休憩時間 H
         # 備考 string
-        Higuchi.read_pdf(8, self.file_path)
         
         # ジョブカンファイルを取得
         self.jobkan_file_path = Murase.Call_Jobkan_Path() + self.employee_name + ".pdf"
