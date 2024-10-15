@@ -10,7 +10,7 @@ def Output_Message(difference_days):
 def Sanitize_Time(time_str):
     # 時刻を丸める（8:51　→　9:00）
     hour = int(time_str.split(':')[0])
-    minute = int(time_str.split(':')[1])    
+    minute = int(time_str.split(':')[1])
     #15分単位で丸める
     if minute >= 45:
         minute = 45
