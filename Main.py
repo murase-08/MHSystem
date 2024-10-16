@@ -59,7 +59,7 @@ class MHSystemGUI:
         if(self.file_path == None):
             messagebox.showerror("エラー", "ファイルが選択されていません")
             return
-        Higuchi.read_file(5, self.file_path)
+        Higuchi.read_file(4, self.file_path)
         # 会社判別
         company_code = Murase.Check_Company(self.file_name)
     
@@ -67,6 +67,7 @@ class MHSystemGUI:
         # 戻り値 pandasデータフレーム
         # 日付 datetime.date(yyyy,MM,dd) => yyyy-MM-dd
         # 実働時間 H
+        #（warning 樋口 HH:mm　のほうがいいと思います）
         # 開始時間 HH:mm
         # 終了時間 HH:mm
         # 休憩時間 H
