@@ -22,8 +22,8 @@ def Sanitize_Time(time_str):
         minute = 0
     return f"{hour}:{minute}"
 
-def Check_Company(file_name):
-    return Call_Campany_CD("TOKYO_IT_SCHOOL")
+def Check_Company(companyName):
+    return Call_Campany_CD(companyName)
 
 # 会社コードを取得
 def Call_Campany_CD(company_name):

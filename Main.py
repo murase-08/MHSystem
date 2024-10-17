@@ -10,9 +10,6 @@ class MHSystemGUI:
         master.title("MHSystem")
         master.geometry("400x300")
         self.file_path = None
-        self.file_name = None
-        self.jobkan_file_path = None
-        self.employee_name = None
 
         # メインフレーム
         self.main_frame = tk.Frame(master)
@@ -26,14 +23,8 @@ class MHSystemGUI:
         # 会社名選択用のドロップダウン
         self.company_frame = tk.LabelFrame(self.main_frame, text="会社名選択", font=("MS Gothic", 10))
         self.company_frame.pack(pady=10, fill=tk.X)
-
-        # 日本語の文字化けを防ぐため、フォントを指定
-        japanese_font = ("MS Gothic", 10)
         self.company_var = tk.StringVar(value=companies[0])
         self.company_dropdown = tk.OptionMenu(self.company_frame, self.company_var, *companies)
-        self.company_dropdown.config(font=japanese_font)
-        for item in self.company_dropdown['menu'].winfo_children():
-            item.configure(font=japanese_font)
         self.company_dropdown.pack(fill=tk.X)
 
         # 各社ファイル選択ボタン
@@ -59,29 +50,35 @@ class MHSystemGUI:
         if(self.file_path == None):
             messagebox.showerror("エラー", "ファイルが選択されていません")
             return
-        Higuchi.read_file(4, self.file_path)
-        # 会社判別
-        company_code = Murase.Check_Company(self.file_name)
-    
-        # 各社　pdf読み込み　→　フォーマット合わせが目的
-        # 戻り値 pandasデータフレーム
-        # 日付 datetime.date(yyyy,MM,dd) => yyyy-MM-dd
-        # 実働時間 H
-        #（warning 樋口 HH:mm　のほうがいいと思います）
-        # 開始時間 HH:mm
-        # 終了時間 HH:mm
-        # 休憩時間 H
-        # 備考 string
         
-        # ジョブカンファイルを取得
-        self.jobkan_file_path = Murase.Call_Jobkan_Path() + self.employee_name + ".pdf"
-        # ジョブカンデータ読み込み(会社CD:0)
-        Higuchi.read_pdf(Murase.Call_Campany_CD("ITCROSS"), self.jobkan_file_path)
+        # ドロップボックスの会社名を取得
+        companyName = self.company_var.get()
+
+        # 会社判別
+        companyCode = Murase.Check_Company(companyName)
+        print('会社CD：'+companyCode)
+        # 各社pdf読み込み　→　フォーマット合わせが目的
+        # 戻り値 pandasデータフレーム
+        #   社員名 姓
+        #   社員名 名　NULL OK
+        #   日付 datetime.date(yyyy,MM,dd) => yyyy-MM-dd
+        #   実働時間 HH:mm
+        #       （warning 樋口 HH:mm　のほうがいいと思います）=> 村瀬 OK,休憩時間も準じます
+        #   開始時間 HH:mm　NULL OK
+        #   終了時間 HH:mm　NULL OK
+        #   休憩時間 HH:mm　NULL OK
+        #   備考 string　NULL OK
+        cosutomerData = Higuchi.read_file(companyCode, self.file_path)
+        
+        # ジョブカンファイルパスを取得
+        jobkan_file_path = Murase.Call_Jobkan_Path() + cosutomerData.employee_name + ".pdf"
+        # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
+        jobkanData = Higuchi.read_file(Murase.Call_Campany_CD("ITCROSS"), jobkan_file_path)
                         
         # 比較　完全一致比較 日ごとの実働時間で比較
         
         # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
-        file_name = Murase.Create_File_Name(self.employee_name, company_code)
+        file_name = Murase.Create_File_Name(cosutomerData.employee_name, company_code)
         
         # 出力
         Murase.output_csv()

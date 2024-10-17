@@ -1,8 +1,12 @@
 {
     "company_code": {
-        "ITCROSS": 0,
         "SYSTEM_SHARED": 1,
-        "NTPS": 2
+        "TDI_SYSTEM": 2,
+        "SYSTEM_SUPPORT": 3,
+        "ITCROSS": 4,
+        "TECCNO_CREATIVE": 5,
+        "KOKYO_SYSTEM": 6,
+        "CEC": 7
     },
     "jobkan_file_path": "C:\\Users\\user\\Desktop\\jobkan\\"
 }
