@@ -59,7 +59,6 @@ def read_systemshared_file(file_path):
                             "メモ": row[10],
                         }
                     )
-    print(data)
     # データフレームに変換
     pdf_df = pd.DataFrame(data)
     result_df = pdf_df[['日付', '労働時間', '開始', '終了', '休憩時間', 'メモ']]
@@ -158,10 +157,13 @@ def read_itcross_file(file_path):
     with pdfplumber.open(file_path) as pdf:
         page = pdf.pages[0]
         tables = page.extract_tables()
+        text = page.extract_text()
+        print(text)
+        if text:
+                print(f"ページのテキスト: {text}")
+        else:
+                print("テキストが抽出できませんでした")
         for table in tables:
-            print(table[1:])
-            print(table[2:])
-            print(table[3:])
             for row in table[3:]:
                 if len(row) >= 15:
                     data.append(
@@ -185,7 +187,7 @@ def read_itcross_file(file_path):
                     )
     pdf_df = pd.DataFrame(data)
     print(pdf_df)
-
+    return pdf_df
 # ㈱テクノクリエイティブのPDF読み込み関数
 def read_tecnocreative_file(file_path):
     # 実働時間を計算するために、「開始」「終了」「休憩」「残業」を datetime 型に変換する関数

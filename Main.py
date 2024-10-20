@@ -56,7 +56,7 @@ class MHSystemGUI:
 
         # 会社判別
         companyCode = Murase.Check_Company(companyName)
-        print('会社CD：'+companyCode)
+        print('会社CD：'+str(companyCode))
         # 各社pdf読み込み　→　フォーマット合わせが目的
         # 戻り値 pandasデータフレーム
         #   社員名 姓
