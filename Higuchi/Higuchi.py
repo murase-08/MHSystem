@@ -2,6 +2,7 @@ import pdfplumber
 import pandas as pd
 from datetime import datetime, timedelta
 import re
+
 # 各会社の勤怠情報を読み込み、リストとして出力する関数
 def read_file(company_code, file_path):
     if company_code == 1:
