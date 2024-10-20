@@ -56,8 +56,13 @@ class MHSystemGUI:
 
         # 会社判別
         companyCode = Murase.Check_Company(companyName)
+<<<<<<< HEAD
         print('会社CD：'+str(companyCode))
         # 各社pdf読み込み　→　フォーマット合わせが目的
+=======
+        print('会社CD：',companyCode)
+        # # 各社pdf読み込み　→　フォーマット合わせが目的
+>>>>>>> origin/main
         # 戻り値 pandasデータフレーム
         #   社員名 姓
         #   社員名 名　NULL OK
@@ -69,7 +74,7 @@ class MHSystemGUI:
         #   休憩時間 HH:mm　NULL OK
         #   備考 string　NULL OK
         cosutomerData = Higuchi.read_file(companyCode, self.file_path)
-        
+        print(cosutomerData)
         # ジョブカンファイルパスを取得
         jobkan_file_path = Murase.Call_Jobkan_Path() + cosutomerData.employee_name + ".pdf"
         # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
