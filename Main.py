@@ -2,7 +2,7 @@ import json
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from Murase import Murase
-from Higuchi import Higuchi,ReturnCompany
+from Higuchi import DistinctCompany, Higuchi
 
 class MHSystemGUI:
     def __init__(self, master):
@@ -51,19 +51,18 @@ class MHSystemGUI:
             messagebox.showerror("エラー", "ファイルが選択されていません")
             return
         
+        #(warning:樋口・これたぶんいらない)
         # ドロップボックスの会社名を取得
         companyName = self.company_var.get()
         
         # 会社判別
-        companyCode = Murase.Check_Company(companyName)
-        # 会社判別
-        companyCode = ReturnCompany.return_company_code(self.file_path)
+        companyCode = DistinctCompany.return_company_code(self.file_path)
         
-        print('会社CD：'+str(companyCode))
-        # 各社pdf読み込み　→　フォーマット合わせが目的
         print('会社CD：',companyCode)
         # # 各社pdf読み込み　→　フォーマット合わせが目的
-        
+        companyFormatList =Higuchi.read_file(self.file_path,companyCode)
+        # companyFormatListは辞書リスト
+        print(companyFormatList)
         # 戻り値 pandasデータフレーム
         #   社員名 姓
         #   社員名 名　NULL OK
