@@ -19,7 +19,7 @@ def sanitize_table(pure_df,file_path):
     result_df = pure_df[["日付", "労働時間", "開始", "終了", "休憩時間", "メモ"]]
     # カラム名を変更
     result_df = result_df.rename(
-        columns={"開始": "開始時間", "終了": "終了時間", "メモ": "備考"}
+        columns={"労働時間": "実働時間","開始": "開始時間", "終了": "終了時間", "メモ": "備考"}
     )
     # PDF内から20xxの年を抽出
     year = extract_year_from_pdf(file_path)
