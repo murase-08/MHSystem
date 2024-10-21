@@ -2,7 +2,7 @@ import json
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from Murase import Murase
-from Higuchi import Higuchi
+from Higuchi import Higuchi,ReturnCompany
 
 class MHSystemGUI:
     def __init__(self, master):
@@ -53,16 +53,17 @@ class MHSystemGUI:
         
         # ドロップボックスの会社名を取得
         companyName = self.company_var.get()
-
+        
         # 会社判別
         companyCode = Murase.Check_Company(companyName)
-<<<<<<< HEAD
+        # 会社判別
+        companyCode = ReturnCompany.return_company_code(self.file_path)
+        
         print('会社CD：'+str(companyCode))
         # 各社pdf読み込み　→　フォーマット合わせが目的
-=======
         print('会社CD：',companyCode)
         # # 各社pdf読み込み　→　フォーマット合わせが目的
->>>>>>> origin/main
+        
         # 戻り値 pandasデータフレーム
         #   社員名 姓
         #   社員名 名　NULL OK
@@ -73,8 +74,8 @@ class MHSystemGUI:
         #   終了時間 HH:mm　NULL OK
         #   休憩時間 HH:mm　NULL OK
         #   備考 string　NULL OK
-        cosutomerData = Higuchi.read_file(companyCode, self.file_path)
-        print(cosutomerData)
+        #cosutomerData = Higuchi.read_file(companyCode, self.file_path)
+        #print(cosutomerData)
         # ジョブカンファイルパスを取得
         jobkan_file_path = Murase.Call_Jobkan_Path() + cosutomerData.employee_name + ".pdf"
         # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
