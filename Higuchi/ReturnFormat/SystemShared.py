@@ -5,16 +5,17 @@ import re
 
 # 株式会社システムシェアードのPDF読み込み関数
 def read_systemshared_file(file_path):
-    #何も編集がされていないそのまんまのテーブル
+    #何も編集がされていないテーブル
     pure_df = extract_systemshared_table(file_path)
     #フォーマットをそろえる
-    format_df = sanitize_table(pure_df,file_path)
-    #オブジェクトにformat_tableを入れて戻り値として返す
+    format_df = sanitize_systemshared(pure_df,file_path)
+    # カラム名を変更
+    format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
     # データフレームを辞書のリスト形式に変換
     dict_list = format_df.to_dict(orient='records')
     return dict_list
     
-def sanitize_table(pure_df,file_path):
+def sanitize_systemshared(pure_df,file_path):
     #必要なカラムだけ抽出
     result_df = pure_df[["日付", "労働時間", "開始", "終了", "休憩時間", "メモ"]]
     # カラム名を変更
@@ -50,6 +51,7 @@ def convert_to_full_date(year, raw_date):
         return formatted_date
     return None
 
+#取得対象のテーブルを取得する
 def extract_systemshared_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:
