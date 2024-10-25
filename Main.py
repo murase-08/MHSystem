@@ -75,15 +75,15 @@ class MHSystemGUI:
         #   備考 string　NULL OK
         #cosutomerData = Higuchi.read_file(companyCode, self.file_path)
         #print(cosutomerData)
-        # ジョブカンファイルパスを取得
-        jobkan_file_path = Murase.Call_Jobkan_Path() + cosutomerData.employee_name + ".pdf"
+        # ジョブカンファイルパスを取得 TODO:正規表現の実装
+        jobkan_file_path = Murase.Call_Jobkan_Path() + companyFormatList[name] + ".pdf"
         # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
         jobkanData = Higuchi.read_file(Murase.Call_Campany_CD("ITCROSS"), jobkan_file_path)
                         
         # 比較　完全一致比較 日ごとの実働時間で比較
         
         # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
-        file_name = Murase.Create_File_Name(cosutomerData.employee_name, company_code)
+        file_name = Murase.Create_File_Name(companyFormatList[name], companyCode)
         
         # 出力
         Murase.output_csv()
