@@ -5,6 +5,8 @@ import re
 
 # 株式会社システムシェアードのPDF読み込み関数
 def read_systemshared_file(file_path):
+    full_name = extract_name_from_systemshared(file_path)
+    print("ファイルの対象ユーザーは"+full_name+"です。")
     #何も編集がされていないテーブル
     pure_df = extract_systemshared_table(file_path)
     #フォーマットをそろえる
@@ -13,7 +15,9 @@ def read_systemshared_file(file_path):
     format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
     # データフレームを辞書のリスト形式に変換
     dict_list = format_df.to_dict(orient='records')
-    return dict_list
+    # work_dataにフォーマット
+    work_data = format_to_work_data(full_name, dict_list)
+    return work_data
     
 def sanitize_systemshared(pure_df,file_path):
     #必要なカラムだけ抽出
@@ -57,7 +61,6 @@ def extract_systemshared_table(file_path):
     with pdfplumber.open(file_path) as pdf:
         page = pdf.pages[0]
         tables = page.extract_tables()
-
         # 勤怠データの処理
         for table in tables:
             for row in table[1:]:
@@ -80,3 +83,22 @@ def extract_systemshared_table(file_path):
     # データフレームに変換
     pdf_df = pd.DataFrame(data)
     return pdf_df
+
+# PDFから名前を取り出す
+def extract_name_from_systemshared(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        page = pdf.pages[0]
+        tables = page.extract_tables()
+        # "Teacher-RecoRu0082 佐々木麻緒"
+        full_name = tables[0][3][1]
+        # 最後の要素を取得
+        name = full_name.split()[-1].replace(" ", "")
+    return name
+
+def format_to_work_data(name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": name,
+        "work_days": dict_list
+    }
+    return work_data

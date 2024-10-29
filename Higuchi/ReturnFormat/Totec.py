@@ -5,11 +5,15 @@ import re
 # TOTECのPDF読み込み関数
 # 未完成(一部の勤怠情報が読み取れていないため修正が必要)
 def read_totec_file(file_path):
+    full_name = extract_name_from_totec(file_path)
+    print("ファイルの対象ユーザーは"+full_name+"です。")
     pure_df = extract_totec_table(file_path)
     format_df = sanitize_totec(pure_df)
     format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
     dict_list = format_df.to_dict(orient='records')
-    return dict_list
+    # work_dataにフォーマット
+    work_data = format_to_work_data(full_name, dict_list)
+    return work_data
 
 def sanitize_totec(pure_df):
     # カラム名を変更
@@ -89,3 +93,21 @@ def extract_totec_table(file_path):
     pdf_df = pd.DataFrame(data)
     return pdf_df
     
+# PDFから名前を取り出す
+def extract_name_from_totec(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        page = pdf.pages[0]
+        text = page.extract_text()
+        # print(text)
+        # 正規表現で「名前：」の後に続く名前部分を抽出
+        match = re.search(r"名前：([^\s]+ [^\s]+)", text)
+        full_name = match.group(1).replace(" ", "").replace("　", "") # 空白を削除して連結
+        return full_name
+
+def format_to_work_data(name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": name,
+        "work_days": dict_list
+    }
+    return work_data

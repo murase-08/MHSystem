@@ -7,6 +7,8 @@ import calendar
 # 松井の会社のExcel読み込み関数
 # 勤怠情報をExcelから読み込み、必要なカラムを抽出する関数
 def read_cec_file(file_path):
+    full_name = extract_name_from_cec(file_path)
+    print("ファイルの対象ユーザーは"+full_name+"です。")
     #何も編集がされていないテーブル
     pure_df = extract_cec_table(file_path)
     format_df = sanitize_cec(pure_df,file_path)
@@ -14,12 +16,13 @@ def read_cec_file(file_path):
     dict_list = format_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
     dict_list = convert_timestamps(dict_list)
-    print(dict_list)
+    # work_dataにフォーマット
+    work_data = format_to_work_data(full_name, dict_list)
+    print(work_data)
 
 def sanitize_cec(pure_df,file_path):
     # 年と月をExcelから取得
     year, month = extract_year_and_month_from_excel(file_path)
-    print(year,month)
     # 月の日数を取得
     year = int(year)
     month = int(month)
@@ -102,3 +105,23 @@ def convert_timestamps(dict_list):
         if isinstance(record['day'], pd.Timestamp):
             record['day'] = record['day'].strftime('%Y-%m-%d')
     return dict_list
+
+def extract_name_from_cec(file_path):
+    df = pd.read_excel(
+        file_path, sheet_name="作業時間報告", engine="openpyxl", header=0
+    )
+    dict_list = df.to_dict(orient='records')
+    data = dict_list[2]
+    # "Unnamed: 8"の値を取得
+    name = data.get('Unnamed: 8')
+    # 空白(全角/半角)を削除
+    full_name = name.replace("　", "").replace(" ", "")
+    return full_name
+
+def format_to_work_data(name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": name,
+        "work_days": dict_list
+    }
+    return work_data

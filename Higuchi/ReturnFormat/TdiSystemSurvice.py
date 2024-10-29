@@ -5,16 +5,20 @@ import re
 import calendar
 # TDIシステムサービス株式会社のPDF読み込み関数
 def read_tdisystem_file(file_path):
+    # PDFから名前を取り出す
+    full_name = extract_name_from_tdisystem(file_path)
+    print("ファイルの対象ユーザーは"+full_name+"です。")
     #何も編集がされていないテーブル
     pure_df = extract_tdisystem_table(file_path)
     format_df = sanitize_tdisystem(pure_df,file_path)
-    print(format_df)
     # カラム名を変更
     format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
     dict_list = format_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
     dict_list = convert_timestamps(dict_list)
-    return dict_list
+    # work_dataにフォーマット
+    work_data = format_to_work_data(full_name, dict_list)
+    return work_data
 
 def sanitize_tdisystem(pure_df, file_path):
     result_df = pure_df[["日付", "実働時間", "業務内容"]]
@@ -117,3 +121,23 @@ def convert_timestamps(dict_list):
         if isinstance(record['day'], pd.Timestamp):
             record['day'] = record['day'].strftime('%Y-%m-%d')
     return dict_list
+
+# PDFから名前を取り出す
+def extract_name_from_tdisystem(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        page = pdf.pages[0]
+        tables = page.extract_tables()
+        # 株式会社アイティークロス\n大平 崇
+        name = tables[0][35][0]
+        # 改行で分割して下の名前部分を取得、空白を削除
+        full_name = name.split('\n')[-1].replace(" ", "")
+        
+        # 出力結果: 大平崇
+        return full_name
+def format_to_work_data(name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": name,
+        "work_days": dict_list
+    }
+    return work_data

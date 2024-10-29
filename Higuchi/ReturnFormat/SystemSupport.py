@@ -6,6 +6,8 @@ import calendar
 
 # 株式会社システムサポートのPDF読み込み関数
 def read_systemsupport_file(file_path):
+    full_name = extract_name_from_systemsupport(file_path)
+    print("ファイルの対象ユーザーは"+full_name+"です。")
     #何も編集がされていないテーブル
     pure_df = extract_systemsupport_table(file_path)
     format_df = sanitize_systemsupport(pure_df,file_path)
@@ -14,7 +16,9 @@ def read_systemsupport_file(file_path):
     dict_list = format_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
     dict_list = convert_timestamps(dict_list)
-    return dict_list
+    # work_dataにフォーマット
+    work_data = format_to_work_data(full_name, dict_list)
+    return work_data
 
 #取得対象のテーブルを取得する
 def extract_systemsupport_table(file_path):
@@ -100,3 +104,21 @@ def convert_timestamps(dict_list):
         if isinstance(record['day'], pd.Timestamp):
             record['day'] = record['day'].strftime('%Y-%m-%d')
     return dict_list
+
+# PDFから名前を取り出す
+def extract_name_from_systemsupport(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        page = pdf.pages[0]
+        tables = page.extract_tables()
+        name = tables[0][6][12]
+        # 改行で分割して下の名前部分を取得、空白を削除
+        full_name = name.replace(" ", "")
+        return full_name
+    
+def format_to_work_data(name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": name,
+        "work_days": dict_list
+    }
+    return work_data

@@ -6,6 +6,9 @@ import calendar
 
 # ㈱テクノクリエイティブのPDF読み込み関数
 def read_tecnocreative_file(file_path):
+    # PDFから名前を取り出す
+    full_name = extract_name_from_tecnocreative(file_path)
+    print("ファイルの対象ユーザーは"+full_name+"です。")
     # 何も編集がされていないテーブル
     pure_df = extract_tecnocreative_table(file_path)
     format_df = sanitize_tecnocreative(pure_df,file_path)
@@ -13,7 +16,9 @@ def read_tecnocreative_file(file_path):
     dict_list = format_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
     dict_list = convert_timestamps(dict_list)
-    return dict_list
+    # work_dataにフォーマット
+    work_data = format_to_work_data(full_name, dict_list)
+    return work_data
     
 # 実働時間を計算するために、「開始」「終了」「休憩」「残業」を datetime 型に変換する関数
 def convert_to_time(val):
@@ -151,3 +156,23 @@ def convert_timestamps(dict_list):
         if isinstance(record['day'], pd.Timestamp):
             record['day'] = record['day'].strftime('%Y-%m-%d')
     return dict_list
+
+# PDFから名前を取り出す
+def extract_name_from_tecnocreative(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        page = pdf.pages[0]
+        tables = page.extract_tables()
+        # "寺内 雄基 ㊞"
+        name = tables[0][0][3]
+        # "㊞"を削除して空白も取り除く
+        # "寺内雄基"
+        full_name = name.replace("㊞", "").replace(" ", "")
+        return full_name
+    
+def format_to_work_data(name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": name,
+        "work_days": dict_list
+    }
+    return work_data
