@@ -52,6 +52,7 @@ def change_firstFormat_jobkan(pure_df,file_path):
         result_df = result_df[result_df["日付"].apply(lambda x: int(x.split("-")[2]) <= day_count)]
     return result_df
 
+# pure_dfの取り出し
 def extract_jobkan_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:

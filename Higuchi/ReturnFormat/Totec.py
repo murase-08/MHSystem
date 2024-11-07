@@ -44,7 +44,7 @@ def change_firstFormat_totec(pure_df):
     result_df = pure_df[["日付", "実働時間", "開始時間", "終了時間", "休憩時間", "備考"]]
     return result_df
     
-#取得対象のテーブルを取得する関数
+# pure_dfの取り出し
 def extract_totec_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:

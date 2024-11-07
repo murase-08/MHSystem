@@ -25,31 +25,6 @@ def read_tecnocreative_file(file_path):
     work_data = Higuchi.format_to_work_data(full_name, dict_list)
     return work_data
 
-def extract_tecnocreative_table(file_path):
-    # データの読み込みと処理
-    data = []
-    with pdfplumber.open(file_path) as pdf:
-        page = pdf.pages[0]
-        tables = page.extract_tables()
-        for table in tables:
-            for row in table[2:]:
-                data.append(
-                    {
-                        "日付": row[0],
-                        "開始": row[3],
-                        "終了": row[4],
-                        "休憩": row[5],
-                        "定時": row[8],
-                        "残業": row[9],
-                        "深夜": row[10],
-                        "休出": row[11],
-                        "届出": row[12],
-                        "備考": row[13],
-                    }
-                )
-    pdf_df = pd.DataFrame(data)
-    return pdf_df
-
 def change_firstFormat_tecnocreative(pure_df,file_path):
     # 必要なカラムだけ抽出
     result_df = pure_df[["日付", "開始", "終了", "休憩", "残業", "備考"]]
@@ -95,6 +70,32 @@ def change_firstFormat_tecnocreative(pure_df,file_path):
     result_df = result_df.head(max_day)
     
     return result_df
+
+# pure_dfの取り出し
+def extract_tecnocreative_table(file_path):
+    # データの読み込みと処理
+    data = []
+    with pdfplumber.open(file_path) as pdf:
+        page = pdf.pages[0]
+        tables = page.extract_tables()
+        for table in tables:
+            for row in table[2:]:
+                data.append(
+                    {
+                        "日付": row[0],
+                        "開始": row[3],
+                        "終了": row[4],
+                        "休憩": row[5],
+                        "定時": row[8],
+                        "残業": row[9],
+                        "深夜": row[10],
+                        "休出": row[11],
+                        "届出": row[12],
+                        "備考": row[13],
+                    }
+                )
+    pdf_df = pd.DataFrame(data)
+    return pdf_df
 
 # PDFから名前を取り出す
 def extract_name_from_tecnocreative(file_path):

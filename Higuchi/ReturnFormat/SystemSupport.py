@@ -53,7 +53,7 @@ def change_firstFormat_systemsupport(pure_df,file_path):
     result_df = result_df.head(max_day)
     return result_df
 
-#取得対象のテーブルを取得する関数
+# pure_dfの取り出し
 def extract_systemsupport_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:

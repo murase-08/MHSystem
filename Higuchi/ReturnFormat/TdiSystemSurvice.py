@@ -58,6 +58,7 @@ def change_firstFormat_tdisystem(pure_df, file_path):
     # レコード数をその月の最大日数に制限する
     return result_df.head(max_day)
     
+# pure_dfの取り出し
 def extract_tdisystem_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:

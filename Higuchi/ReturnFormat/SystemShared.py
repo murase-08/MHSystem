@@ -37,7 +37,7 @@ def change_firstFormat_systemshared(pure_df,file_path):
     result_df["日付"] = result_df["日付"].apply(lambda x: Higuchi.convert_to_full_date_p2(year, x))
     return result_df
 
-#取得対象のテーブルを取得する関数
+# pure_dfの取り出し
 def extract_systemshared_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:

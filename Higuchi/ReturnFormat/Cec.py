@@ -86,6 +86,15 @@ def format_time(x):
     else:
         return x
    
+def extract_year_and_month_from_excel(file_path):
+    # Excelファイルを読み込む（年と月が特定のセルにあると仮定）
+    wb = pd.read_excel(file_path, sheet_name="作業時間報告", engine="openpyxl")
+    # 年は2行目のUnnamed: 2列、月は2行目のUnnamed: 4列にあります（0インデックスのため行は2）
+    year = str(wb.loc[2, 'Unnamed: 2']).strip()  # 不要なスペースを削除
+    month = str(wb.loc[2, 'Unnamed: 4']).strip()  # 不要なスペースを削除
+    return year, month
+
+# pure_dfの取り出し
 def extract_cec_table(file_path):
     df = pd.read_excel(
         file_path, sheet_name="作業時間報告", engine="openpyxl", header=5
@@ -102,14 +111,6 @@ def extract_cec_table(file_path):
         ]
     ]
     return excel_df
-
-def extract_year_and_month_from_excel(file_path):
-    # Excelファイルを読み込む（年と月が特定のセルにあると仮定）
-    wb = pd.read_excel(file_path, sheet_name="作業時間報告", engine="openpyxl")
-    # 年は2行目のUnnamed: 2列、月は2行目のUnnamed: 4列にあります（0インデックスのため行は2）
-    year = str(wb.loc[2, 'Unnamed: 2']).strip()  # 不要なスペースを削除
-    month = str(wb.loc[2, 'Unnamed: 4']).strip()  # 不要なスペースを削除
-    return year, month
 
 def extract_name_from_cec(file_path):
     df = pd.read_excel(
