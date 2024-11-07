@@ -2,20 +2,29 @@ import pdfplumber
 import pandas as pd
 from datetime import datetime, timedelta
 import re
-# TOTECのPDF読み込み関数
-# 未完成(一部の勤怠情報が読み取れていないため修正が必要)
+from Higuchi import Higuchi
+# TOTEC読み込み関数
 def read_totec_file(file_path):
+    # 名前の取得
     full_name = extract_name_from_totec(file_path)
     print("ファイルの対象ユーザーは"+full_name+"です。")
+    #何も編集がされていないテーブル
     pure_df = extract_totec_table(file_path)
-    format_df = sanitize_totec(pure_df)
-    format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
-    dict_list = format_df.to_dict(orient='records')
-    # work_dataにフォーマット
-    work_data = format_to_work_data(full_name, dict_list)
+    # テーブルを第一フォーマットの形に変更
+    firstFormat_df = change_firstFormat_totec(pure_df)
+    # カラム名を変更
+    englishFormat_df = firstFormat_df.rename(columns={
+        "日付": "day", "実働時間": "worktime", "開始時間": "starttime", 
+        "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"
+        })
+    # データフレームを辞書のリスト形式に変換
+    dict_list = englishFormat_df.to_dict(orient='records')
+    # work_data(名前と勤怠データを合わせたフォーマットにして返す
+    work_data = Higuchi.format_to_work_data(full_name, dict_list)
     return work_data
 
-def sanitize_totec(pure_df):
+# テーブルを第一フォーマットの形に変更
+def change_firstFormat_totec(pure_df):
     # カラム名を変更
     pure_df = pure_df.rename(columns={"備考": "実働時間","開始": "開始時間", "終了": "終了時間"})
     # 実働時間の列から改行以降の文字を削除して、数値部分だけを取得する処理
@@ -40,12 +49,15 @@ def convert_hours_to_time(hours):
     if hours is None or hours == "":  # 空またはNoneのチェック
         return None
     try:
-        hours_float = float(hours)  # 小数点の処理
-        h = int(hours_float)  # 小数点以下を切り捨てて時間を取得
-        m = int((hours_float - h) * 60)  # 小数点以下を分に変換
+        # 文字列型を浮動小数点型に変換
+        hours_float = float(hours)
+        # 時間を取得
+        h = int(hours_float)
+        # 分に変換して取得
+        m = int((hours_float - h) * 60)
         return f"{h:02d}:{m:02d}"
     except ValueError:
-        return None  # 値が無効な場合はNoneを返す
+        return None  # 値が無効な場合(例えば "abc" など)はNoneを返す
 
 # 日付フォーマット "2024/05/01" → "2024-05-01" に変更する関数
 def convert_date_format(date_str):
@@ -53,7 +65,8 @@ def convert_date_format(date_str):
         return date_str.replace('/', '-')  # スラッシュをハイフンに置き換え
     except AttributeError:
         return date_str  # 万が一エラーが出た場合は元の値を返す
-# PDFからデータを抽出する関数
+    
+#取得対象のテーブルを取得する関数
 def extract_totec_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:
@@ -103,11 +116,3 @@ def extract_name_from_totec(file_path):
         match = re.search(r"名前：([^\s]+ [^\s]+)", text)
         full_name = match.group(1).replace(" ", "").replace("　", "") # 空白を削除して連結
         return full_name
-
-def format_to_work_data(name, dict_list):
-    # work_dataフォーマットに変換
-    work_data = {
-        "name": name,
-        "work_days": dict_list
-    }
-    return work_data

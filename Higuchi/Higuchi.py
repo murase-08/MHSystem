@@ -26,4 +26,11 @@ def read_file(file_path,companyCode):
     else:
         print("存在しない会社です。")
         
-#実働時間を計算するメソッドを記述します↓
+# work_data(名前と勤怠データを合わせたフォーマットにして返す
+def format_to_work_data(full_name, dict_list):
+    # work_dataフォーマットに変換
+    work_data = {
+        "name": full_name,
+        "work_days": dict_list
+    }
+    return work_data

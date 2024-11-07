@@ -2,24 +2,29 @@ import pdfplumber
 import pandas as pd
 from datetime import datetime, timedelta
 import re
+from Higuchi import Higuchi
 
 # 株式会社システムシェアードのPDF読み込み関数
 def read_systemshared_file(file_path):
+    # 名前の取得
     full_name = extract_name_from_systemshared(file_path)
     print("ファイルの対象ユーザーは"+full_name+"です。")
     #何も編集がされていないテーブル
     pure_df = extract_systemshared_table(file_path)
-    #フォーマットをそろえる
-    format_df = sanitize_systemshared(pure_df,file_path)
+    # テーブルを第一フォーマットの形に変更
+    firstFormat_df = change_firstFormat_systemshared(pure_df,file_path)
     # カラム名を変更
-    format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
+    englishFormat_df = firstFormat_df.rename(columns={
+        "日付": "day", "実働時間": "worktime", "開始時間": "starttime", 
+        "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"
+        })
     # データフレームを辞書のリスト形式に変換
-    dict_list = format_df.to_dict(orient='records')
-    # work_dataにフォーマット
-    work_data = format_to_work_data(full_name, dict_list)
+    dict_list = englishFormat_df.to_dict(orient='records')
+    # work_data(名前と勤怠データを合わせたフォーマットにして返す
+    work_data = Higuchi.format_to_work_data(full_name, dict_list)
     return work_data
     
-def sanitize_systemshared(pure_df,file_path):
+def change_firstFormat_systemshared(pure_df,file_path):
     #必要なカラムだけ抽出
     result_df = pure_df[["日付", "労働時間", "開始", "終了", "休憩時間", "メモ"]]
     # カラム名を変更
@@ -28,7 +33,6 @@ def sanitize_systemshared(pure_df,file_path):
     )
     # PDF内から20xxの年を抽出
     year = extract_year_from_pdf(file_path)
-    
     # 日付を20xx-05-01形式に変換
     result_df["日付"] = result_df["日付"].apply(lambda x: convert_to_full_date(year, x))
     return result_df
@@ -55,7 +59,7 @@ def convert_to_full_date(year, raw_date):
         return formatted_date
     return None
 
-#取得対象のテーブルを取得する
+#取得対象のテーブルを取得する関数
 def extract_systemshared_table(file_path):
     data = []
     with pdfplumber.open(file_path) as pdf:
@@ -94,11 +98,3 @@ def extract_name_from_systemshared(file_path):
         # 最後の要素を取得
         name = full_name.split()[-1].replace(" ", "")
     return name
-
-def format_to_work_data(name, dict_list):
-    # work_dataフォーマットに変換
-    work_data = {
-        "name": name,
-        "work_days": dict_list
-    }
-    return work_data

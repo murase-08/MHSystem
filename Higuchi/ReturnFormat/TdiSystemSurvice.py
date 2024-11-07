@@ -3,31 +3,37 @@ import pandas as pd
 from datetime import datetime, timedelta
 import re
 import calendar
+from Higuchi import Higuchi
 # TDIシステムサービス株式会社のPDF読み込み関数
 def read_tdisystem_file(file_path):
-    # PDFから名前を取り出す
+    # 名前の取得
     full_name = extract_name_from_tdisystem(file_path)
     print("ファイルの対象ユーザーは"+full_name+"です。")
-    #何も編集がされていないテーブル
+    #何も編集がされていないテーブル(pure_df)
     pure_df = extract_tdisystem_table(file_path)
-    format_df = sanitize_tdisystem(pure_df,file_path)
+    # テーブルを第一フォーマットの形に変更
+    firstFormat_df = change_firstFormat_tdisystem(pure_df,file_path)
     # カラム名を変更
-    format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
-    dict_list = format_df.to_dict(orient='records')
+    englishFormat_df = firstFormat_df.rename(columns={
+        "日付": "day", "実働時間": "worktime", "開始時間": "starttime", 
+        "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"
+        })
+    # データフレームを辞書のリスト形式に変換
+    dict_list = englishFormat_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
     dict_list = convert_timestamps(dict_list)
-    # work_dataにフォーマット
-    work_data = format_to_work_data(full_name, dict_list)
+    # work_data(名前と勤怠データを合わせたフォーマットにして返す
+    work_data = Higuchi.format_to_work_data(full_name, dict_list)
     return work_data
 
-def sanitize_tdisystem(pure_df, file_path):
+def change_firstFormat_tdisystem(pure_df, file_path):
+    # 必要なカラムのみを取り出す
     result_df = pure_df[["日付", "実働時間", "業務内容"]]
     
     # 空のカラムを追加（フォーマットを合わせるため）
-    result_df.loc[:, "開始時間"] = None
-    result_df.loc[:, "終了時間"] = None
-    result_df.loc[:, "休憩時間"] = None
-    
+    result_df = result_df.assign(開始時間=None)
+    result_df = result_df.assign(終了時間=None)
+    result_df = result_df.assign(休憩時間=None)
     # カラム名を変更
     result_df = result_df.rename(columns={"業務内容": "備考"})
     
@@ -50,9 +56,7 @@ def sanitize_tdisystem(pure_df, file_path):
     result_df = result_df[["日付", "実働時間", "開始時間", "終了時間", "休憩時間", "備考"]]
 
     # レコード数をその月の最大日数に制限する
-    result_df = result_df.head(max_day)
-
-    return result_df
+    return result_df.head(max_day)
 
 def extract_year_and_month_from_pdf(file_path):
     # PDFから西暦（20xx）と月を抽出する処理
@@ -113,11 +117,12 @@ def extract_tdisystem_table(file_path):
                             "業務内容": row[4],
                         }
                     )
-    pdf_df = pd.DataFrame(data)
-    return pdf_df
-# 'day' の Timestamp を文字列に変換する関数
+    return pd.DataFrame(data)
+
+# 'day' の pd.Timestamp 型を文字列(YYYY-MM-DD)に変換する関数
 def convert_timestamps(dict_list):
     for record in dict_list:
+        # 'day' キーに対応する値が、pd.Timestamp 型かどうかを確認
         if isinstance(record['day'], pd.Timestamp):
             record['day'] = record['day'].strftime('%Y-%m-%d')
     return dict_list
@@ -129,15 +134,5 @@ def extract_name_from_tdisystem(file_path):
         tables = page.extract_tables()
         # 株式会社アイティークロス\n大平 崇
         name = tables[0][35][0]
-        # 改行で分割して下の名前部分を取得、空白を削除
-        full_name = name.split('\n')[-1].replace(" ", "")
-        
-        # 出力結果: 大平崇
-        return full_name
-def format_to_work_data(name, dict_list):
-    # work_dataフォーマットに変換
-    work_data = {
-        "name": name,
-        "work_days": dict_list
-    }
-    return work_data
+        # 改行で分割して下の名前部分を取得、空白を削除 →大平崇
+        return name.split('\n')[-1].replace(" ", "")

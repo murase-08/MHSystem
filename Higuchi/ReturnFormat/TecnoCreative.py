@@ -3,21 +3,26 @@ import pandas as pd
 from datetime import datetime, timedelta
 import re
 import calendar
+from Higuchi import Higuchi
 
 # ㈱テクノクリエイティブのPDF読み込み関数
 def read_tecnocreative_file(file_path):
-    # PDFから名前を取り出す
+    # 名前の取得
     full_name = extract_name_from_tecnocreative(file_path)
     print("ファイルの対象ユーザーは"+full_name+"です。")
     # 何も編集がされていないテーブル
     pure_df = extract_tecnocreative_table(file_path)
-    format_df = sanitize_tecnocreative(pure_df,file_path)
-    format_df = format_df.rename(columns={"日付": "day", "実働時間": "worktime", "開始時間": "starttime", "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"})
-    dict_list = format_df.to_dict(orient='records')
+    # テーブルを第一フォーマットの形に変更
+    firstFormat_df = change_firstFormat_tecnocreative(pure_df,file_path)
+    englishFormat_df = firstFormat_df.rename(columns={
+        "日付": "day", "実働時間": "worktime", "開始時間": "starttime",
+        "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"
+        })
+    dict_list = englishFormat_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
     dict_list = convert_timestamps(dict_list)
-    # work_dataにフォーマット
-    work_data = format_to_work_data(full_name, dict_list)
+    # work_data(名前と勤怠データを合わせたフォーマットにして返す
+    work_data = Higuchi.format_to_work_data(full_name, dict_list)
     return work_data
     
 # 実働時間を計算するために、「開始」「終了」「休憩」「残業」を datetime 型に変換する関数
@@ -77,11 +82,11 @@ def extract_tecnocreative_table(file_path):
     pdf_df = pd.DataFrame(data)
     return pdf_df
 
-def sanitize_tecnocreative(pure_df,file_path):
+def change_firstFormat_tecnocreative(pure_df,file_path):
     # 必要なカラムだけ抽出
     result_df = pure_df[["日付", "開始", "終了", "休憩", "残業", "備考"]]
     # 空のカラムを追加（フォーマットを合わせるため）
-    result_df.loc[:, "実働時間"] = None
+    result_df = result_df.assign(実働時間=None)
     # カラム名を変更
     result_df = result_df.rename(
         columns={"開始": "開始時間", "終了": "終了時間", "休憩": "休憩時間", "残業": "残業時間"}
@@ -168,11 +173,3 @@ def extract_name_from_tecnocreative(file_path):
         # "寺内雄基"
         full_name = name.replace("㊞", "").replace(" ", "")
         return full_name
-    
-def format_to_work_data(name, dict_list):
-    # work_dataフォーマットに変換
-    work_data = {
-        "name": name,
-        "work_days": dict_list
-    }
-    return work_data

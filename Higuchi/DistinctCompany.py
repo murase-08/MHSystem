@@ -69,8 +69,9 @@ def return_company_code(file_path):
                                 print("これはシステムサポートのPDFです")
                                 return 5
                             else:
-                                print(f"No tables found on Page {page_number}")
+                                print("どの会社のPDFでもありません")
     elif file_extension in [".xls", ".xlsx"]:
+        # 会社の一番目のシートを選択します。
         df = pd.read_excel(file_path, sheet_name=0, engine="openpyxl")
         # df.iloc[4, 2]は、データフレームの**5行目（インデックス4）の3列目（インデックス2）**の値を取得
         if (
