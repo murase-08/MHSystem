@@ -31,9 +31,9 @@ def change_firstFormat_totec(pure_df):
     # レコードの備考を実働時間として抽出してます。時間以外にも文字列が同時にカラムに混じってるので取り出す際に危険がある
     pure_df["実働時間"] = pure_df["実働時間"].apply(lambda x: x.split('\n')[0] if isinstance(x, str) else x)
     # 時間外普通と時間外深夜を "HH:MM" 形式に変換
-    pure_df['実働時間'] = pure_df['実働時間'].apply(convert_hours_to_time)
+    pure_df['実働時間'] = pure_df['実働時間'].apply(Higuchi.convert_hours_to_time)
     # 日付を "2024/05/01" → "2024-05-01" 形式に変更
-    pure_df['日付'] = pure_df['日付'].apply(convert_date_format)
+    pure_df['日付'] = pure_df['日付'].apply(Higuchi.convert_date_format)
     
     # 空のカラムを追加（フォーマットを合わせるため）
     pure_df.loc[:, "休憩時間"] = None
@@ -43,28 +43,6 @@ def change_firstFormat_totec(pure_df):
     # 必要なカラムだけ抽出
     result_df = pure_df[["日付", "実働時間", "開始時間", "終了時間", "休憩時間", "備考"]]
     return result_df
-
-# 実働時間の小数点を "HH:MM" に変換する関数
-def convert_hours_to_time(hours):
-    if hours is None or hours == "":  # 空またはNoneのチェック
-        return None
-    try:
-        # 文字列型を浮動小数点型に変換
-        hours_float = float(hours)
-        # 時間を取得
-        h = int(hours_float)
-        # 分に変換して取得
-        m = int((hours_float - h) * 60)
-        return f"{h:02d}:{m:02d}"
-    except ValueError:
-        return None  # 値が無効な場合(例えば "abc" など)はNoneを返す
-
-# 日付フォーマット "2024/05/01" → "2024-05-01" に変更する関数
-def convert_date_format(date_str):
-    try:
-        return date_str.replace('/', '-')  # スラッシュをハイフンに置き換え
-    except AttributeError:
-        return date_str  # 万が一エラーが出た場合は元の値を返す
     
 #取得対象のテーブルを取得する関数
 def extract_totec_table(file_path):

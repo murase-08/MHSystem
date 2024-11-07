@@ -32,32 +32,10 @@ def change_firstFormat_systemshared(pure_df,file_path):
         columns={"労働時間": "実働時間","開始": "開始時間", "終了": "終了時間", "メモ": "備考"}
     )
     # PDF内から20xxの年を抽出
-    year = extract_year_from_pdf(file_path)
+    year = Higuchi.extract_year_from_pdf(file_path)
     # 日付を20xx-05-01形式に変換
-    result_df["日付"] = result_df["日付"].apply(lambda x: convert_to_full_date(year, x))
+    result_df["日付"] = result_df["日付"].apply(lambda x: Higuchi.convert_to_full_date_p2(year, x))
     return result_df
-
-# PDFから20xx年の年を抽出する関数
-def extract_year_from_pdf(file_path):
-    year_pattern = r"20\d{2}"
-    with pdfplumber.open(file_path) as pdf:
-        page = pdf.pages[0]
-        text = page.extract_text()
-        # 年の抽出
-        match = re.search(year_pattern, text)
-        if match:
-            return match.group(0)  # 20xx形式の年を返す
-
-# 日付をフォーマットする関数 (例: 5/1(水) -> 2024-05-01)
-def convert_to_full_date(year, raw_date):
-    # 例: "5/1(水)" から "5/1" を抽出
-    date_match = re.match(r"(\d{1,2})/(\d{1,2})", raw_date)
-    if date_match:
-        month, day = date_match.groups()
-        # "2024-05-01" 形式に変換
-        formatted_date = f"{year}-{int(month):02d}-{int(day):02d}"
-        return formatted_date
-    return None
 
 #取得対象のテーブルを取得する関数
 def extract_systemshared_table(file_path):

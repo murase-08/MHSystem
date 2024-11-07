@@ -24,7 +24,7 @@ def read_cec_file(file_path):
     # データフレームを辞書のリスト形式に変換
     dict_list = englishFormat_df.to_dict(orient='records')
     # 'day' の Timestamp を変換
-    dict_list = convert_timestamps(dict_list)
+    dict_list = Higuchi.convert_timestamps(dict_list)
     # work_data(名前と勤怠データを合わせたフォーマットにして返す
     work_data = Higuchi.format_to_work_data(full_name, dict_list)
     return work_data
@@ -110,12 +110,6 @@ def extract_year_and_month_from_excel(file_path):
     year = str(wb.loc[2, 'Unnamed: 2']).strip()  # 不要なスペースを削除
     month = str(wb.loc[2, 'Unnamed: 4']).strip()  # 不要なスペースを削除
     return year, month
-# 'day' の Timestamp を文字列に変換する関数
-def convert_timestamps(dict_list):
-    for record in dict_list:
-        if isinstance(record['day'], pd.Timestamp):
-            record['day'] = record['day'].strftime('%Y-%m-%d')
-    return dict_list
 
 def extract_name_from_cec(file_path):
     df = pd.read_excel(
