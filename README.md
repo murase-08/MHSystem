@@ -57,7 +57,8 @@ main
 
 出力　excel or CSV
 
-ReturnFormat処理まとめ
+ReturnFormat/read_company_file処理まとめ
+def read_company_file(file_path)
 	■ 名前取得 (full_name)  
 	佐々木麻緒
 
@@ -90,7 +91,7 @@ ReturnFormat処理まとめ
 	{'day': '2024-05-31', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': ''}
 	]
 
-	■ 名前と勤怠データを合わせたフォーマットに変換して返す (full_name, dict_list)
+	■ 名前と勤怠データを合わせたフォーマット(word_data)に変換する (full_name, dict_list → work_data)
 	{'name': '佐々木麻緒', 
 　　　　'work_days': [
               {'day': '2024-05-01', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': ''}, 
@@ -101,6 +102,9 @@ ReturnFormat処理まとめ
               {'day': '2024-05-31', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': ''}
              ]
 　　　　}
+
+	■work_dataを返す
+	return work_data
 
 ファイル構成
 main .py
