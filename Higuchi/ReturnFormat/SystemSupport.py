@@ -38,6 +38,8 @@ def change_firstFormat_systemsupport(pure_df,file_path):
             "作業内容": "備考",
         }
     )
+    # 実働時間のフォーマットを「8:00」から「08:00」に変換
+    result_df["実働時間"] = result_df["実働時間"].apply(lambda x: x.zfill(5) if pd.notnull(x) and ':' in x else x)
     # PDFから動的に西暦と月を抽出して、日付を "20xx-MM-01" 形式に変更する
     year, month = Higuchi.extract_year_and_month_from_pdf(file_path)
     result_df["日付"] = result_df["日付"].apply(lambda x: Higuchi.convert_to_full_date_p1(year, month, x))

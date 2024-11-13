@@ -90,21 +90,19 @@ class MHSystemGUI:
         conpany_workdays = companyFormatList['work_days']
         jobkan_workdays = jobkanFormatList['work_days']
         # データフレームに変換
+        # (warning 辞書リストにしたのにわざわざデータフレームに変換している)
         company_data = pd.DataFrame(conpany_workdays)
         company_data = company_data.fillna("")
         jobkan_data = pd.DataFrame(jobkan_workdays)
         print(company_data)
         print(jobkan_data)
+        # 比較　完全一致比較 日ごとの実働時間で比較
         difference_days = Hayakawa.compare_working_hours(company_data, jobkan_data)
         print("差異のある日付を出力")
         print(difference_days)
-        # # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
-        # jobkanData = Higuchi.read_file(Murase.Call_Campany_CD("ITCROSS"), jobkan_file_path)
-                        
-        # 比較　完全一致比較 日ごとの実働時間で比較
         
-        # # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
-        # file_name = Murase.Create_File_Name(companyFormatList[name], companyCode)
+        # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
+        file_name = Murase.Create_File_Name(companyFormatList['name'], companyCode)
         
         # 出力
         Murase.output_csv()
