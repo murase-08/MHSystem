@@ -20,7 +20,6 @@ def read_cec_file(file_path):
         "日付": "day", "実働時間": "worktime", "開始時間": "starttime",
         "終了時間": "endtime", "休憩時間": "resttime", "備考": "note"
         })
-    print(englishFormat_df)
     # データフレームを辞書のリスト形式に変換
     dict_list = englishFormat_df.to_dict(orient='records')
     # 'day' の Timestamp を変換

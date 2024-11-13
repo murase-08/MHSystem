@@ -7,24 +7,31 @@ import pdfplumber
 def read_file(file_path,companyCode):
     # ジョブカン
     if companyCode == 0:
+        print("ジョブカンを読み込みます")
         return Jobkan.read_jobkan_file(file_path)
     # システムシェアード
     elif companyCode == 1:
+        print("システムシェアードを読み込みます")
         return SystemShared.read_systemshared_file(file_path)
     # テクノクリエイティブ
     elif companyCode == 2:
+        print("テクノクリエイティブを読み込みます")
         return TecnoCreative.read_tecnocreative_file(file_path)
     # TDIシステムサービス
     elif companyCode == 3:
+        print("TDIシステムサービスを読み込みます")
         return TdiSystemSurvice.read_tdisystem_file(file_path)
     # トーテック
     elif companyCode == 4:
+        print("トーテックを読み込みます")
         return Totec.read_totec_file(file_path)
     # システムサポート
     elif companyCode == 5:
+        print("システムサポートを読み込みます")
         return SystemSupport.read_systemsupport_file(file_path)
     # CEC
     elif companyCode == 6:
+        print("CECを読み込みます")
         return Cec.read_cec_file(file_path)
     else:
         print("存在しない会社です。")

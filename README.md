@@ -39,7 +39,7 @@ main
         resttime HH:mm　NULL OK
         note string　NULL OK
 		
-		companyFormatList = 
+	  companyFormatList = 
 　　　{'name': '佐々木麻緒', 
 　　　　'work_days': [
               {'day': '2024-05-01', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': ''}, 

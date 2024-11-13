@@ -3,6 +3,10 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from Murase import Murase
 from Higuchi import DistinctCompany, Higuchi
+from Hayakawa import Hayakawa
+import os
+import re
+import pandas as pd
 
 class MHSystemGUI:
     def __init__(self, master):
@@ -20,12 +24,12 @@ class MHSystemGUI:
             config = json.load(config_file)
         companies = list(config['company_code'].keys())
 
-        # 会社名選択用のドロップダウン
-        self.company_frame = tk.LabelFrame(self.main_frame, text="会社名選択", font=("MS Gothic", 10))
-        self.company_frame.pack(pady=10, fill=tk.X)
+        # # 会社名選択用のドロップダウン
+        # self.company_frame = tk.LabelFrame(self.main_frame, text="会社名選択", font=("MS Gothic", 10))
+        # self.company_frame.pack(pady=10, fill=tk.X)
         self.company_var = tk.StringVar(value=companies[0])
-        self.company_dropdown = tk.OptionMenu(self.company_frame, self.company_var, *companies)
-        self.company_dropdown.pack(fill=tk.X)
+        # self.company_dropdown = tk.OptionMenu(self.company_frame, self.company_var, *companies)
+        # self.company_dropdown.pack(fill=tk.X)
 
         # 各社ファイル選択ボタン
         self.select_file_button = tk.Button(self.main_frame, text="各社PDFファイルを選択", command=self.select_file)
@@ -51,48 +55,66 @@ class MHSystemGUI:
             messagebox.showerror("エラー", "ファイルが選択されていません")
             return
         
-        #(warning:樋口・これたぶんいらない)
-        # ドロップボックスの会社名を取得
-        companyName = self.company_var.get()
-        
         # 会社判別
         companyCode = DistinctCompany.return_company_code(self.file_path)
         
         print('会社CD：',companyCode)
         # # 各社pdf読み込み　→　フォーマット合わせが目的
         companyFormatList =Higuchi.read_file(self.file_path,companyCode)
-        # companyFormatListは辞書リスト
         print(companyFormatList)
-        # 戻り値 pandasデータフレーム
-        #   社員名 姓
-        #   社員名 名　NULL OK
-        #   日付 datetime.date(yyyy,MM,dd) => yyyy-MM-dd
-        #   実働時間 HH:mm
-        #       （warning 樋口 HH:mm　のほうがいいと思います）=> 村瀬 OK,休憩時間も準じます
-        #   開始時間 HH:mm　NULL OK
-        #   終了時間 HH:mm　NULL OK
-        #   休憩時間 HH:mm　NULL OK
-        #   備考 string　NULL OK
-        #cosutomerData = Higuchi.read_file(companyCode, self.file_path)
-        #print(cosutomerData)
-        # ジョブカンファイルパスを取得 TODO:正規表現の実装
-        jobkan_file_path = Murase.Call_Jobkan_Path() + companyFormatList[name] + ".pdf"
-        # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
-        jobkanData = Higuchi.read_file(Murase.Call_Campany_CD("ITCROSS"), jobkan_file_path)
+        
+        # 下のファイルパスはパソコンに依存します
+        directory_path = "C:\\Users\\user\\Desktop\\work_data\\jobkan_file\\"
+        # 佐々木麻緒
+        name_to_search = companyFormatList['name']
+        # 正規表現パターンを作成
+        pattern = re.compile(rf"{name_to_search}.*\.pdf")
+        # 指定された名前を含むファイルを検索
+        matching_files = []
+        for filename in os.listdir(directory_path):
+            if pattern.search(filename):
+                matching_files.append(filename)
+        # 結果の表示
+        if matching_files:
+            print("該当するファイル:")
+            for file in matching_files:
+                print(file)
+        # 正規表現パターンを作成
+        pattern = re.compile(rf"{name_to_search}.*\.pdf")
+        # ジョブカンファイルパスを取得
+        jobkan_file_path = Murase.Call_Jobkan_Path() + file
+        # ジョブカンファイル読み込み
+        jobkanFormatList =Higuchi.read_file(jobkan_file_path,0)
+        print(jobkanFormatList)
+        
+        conpany_workdays = companyFormatList['work_days']
+        jobkan_workdays = jobkanFormatList['work_days']
+        # データフレームに変換
+        company_data = pd.DataFrame(conpany_workdays)
+        company_data = company_data.fillna("")
+        jobkan_data = pd.DataFrame(jobkan_workdays)
+        print(company_data)
+        print(jobkan_data)
+        difference_days = Hayakawa.compare_working_hours(company_data, jobkan_data)
+        print("差異のある日付を出力")
+        print(difference_days)
+        # # ジョブカンデータ読み込み(会社CD:4 ITCROSS)
+        # jobkanData = Higuchi.read_file(Murase.Call_Campany_CD("ITCROSS"), jobkan_file_path)
                         
         # 比較　完全一致比較 日ごとの実働時間で比較
         
-        # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
-        file_name = Murase.Create_File_Name(companyFormatList[name], companyCode)
+        # # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
+        # file_name = Murase.Create_File_Name(companyFormatList[name], companyCode)
         
         # 出力
         Murase.output_csv()
         # ポップアップ出力（おわったよ。差異無いよ。三日分違うよ（9/10,9/11,9/12））
-        difference_days = ["9/10", "9/11", "9/12"]
         messagebox.showinfo(Murase.output_message(difference_days))
 
 
 if __name__ == "__main__":
+    # Tkinterのメインウィンドウを作成
     root = tk.Tk()
     app = MHSystemGUI(root)
+    # GUIアプリケーションが終了するまで継続し、ボタンのクリックなどのイベントを待機
     root.mainloop()
