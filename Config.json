@@ -1,13 +1,13 @@
 {
     "company_code": {
+        "ITCROSS": 0,
         "SYSTEM_SHARED": 1,
-        "TDI_SYSTEM": 2,
-        "SYSTEM_SUPPORT": 3,
-        "ITCROSS": 4,
-        "TECCNO_CREATIVE": 5,
-        "TOTEC": 6,
-        "CEC": 7
+        "TECNO_CREATIVE": 2,
+        "TDI_SYSTEM": 3,
+        "TOTEC": 4,
+        "SYSTEM_SUPPORT": 5,
+        "CEC": 6
     },
-    "jobkan_file_path": "C:\\Users\\user\\Desktop\\work_data\\jobkan_file\\",
-    "create_file_path":"C:\\Users\\user\\Desktop\\work_data\\create_file\\"
+    "jobkan_file_path": "C:\\Users\\333\\Documents\\MHSystemData\\attendance-record-summary-202406061627666164d549c20\\",
+    "create_file_path":" C:\\Users\\333\\Documents\\MHSystemData\\OUTPUT\\"
 }
