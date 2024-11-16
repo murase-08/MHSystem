@@ -61,6 +61,7 @@ class MHSystemGUI:
         
         # # 各社pdf読み込み　→　フォーマット合わせが目的
         companyFormatList =Higuchi.read_file(self.file_path,companyCode)
+        # print(companyFormatList)
         
         print("作業者の名前から対象のジョブカンファイルを探します。")
         # JSONファイルを開いてジョブカンファイルを読み込む
