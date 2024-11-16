@@ -96,6 +96,10 @@ class MHSystemGUI:
         # (warning 辞書リストにしたのにわざわざデータフレームに変換している)
         company_data = pd.DataFrame(conpany_workdays)
         company_data = company_data.fillna("")
+        # worktimeカラムの '00:00' を空文字に置き換え
+        company_data["worktime"] = company_data["worktime"].replace("00:00", "")
+        company_data["starttime"] = company_data["starttime"].replace("00:00", "")
+        company_data["endtime"] = company_data["endtime"].replace("00:00", "")
         jobkan_data = pd.DataFrame(jobkan_workdays)
         
         # 比較　完全一致比較 日ごとの実働時間で比較
