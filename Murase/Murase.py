@@ -36,13 +36,13 @@ def Call_Campany_CD(company_name):
     return company_codes[company_name]
 
 # 会社名を取得
-def Call_Company_Name(company_name):
+def Call_Company_Name(company_code):
     with open('Config.json', 'r') as config_file:
         config = json.load(config_file)
     company_codes = config['company_code']
-    for code, name in company_codes.items():
-        if name == company_name:
-            return code
+    for name, code in company_codes.items():
+        if code == company_code:
+            return name
     return None  # Return None if the company name is not found
 
 # ジョブカンファイルのパスを取得
