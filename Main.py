@@ -66,8 +66,6 @@ class MHSystemGUI:
         # JSONファイルを開いてジョブカンファイルを読み込む
         with open('Config.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
-            
-        # 樋口のローカルで実行するためのジョブカンファイルパス
         directory_path = data["jobkan_file_path"]
         
         # companyFormatListから作業者の名前を探す
@@ -101,8 +99,9 @@ class MHSystemGUI:
         
         # 比較　完全一致比較 日ごとの実働時間で比較
         difference_days = Hayakawa.compare_working_hours(company_data, jobkan_data)
+        # ポップアップメッセージ
+        messagebox.showinfo("処理が完了しました。", Murase.Output_Message(difference_days))
         # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
-        
         print("ファイルを作成します。")
         file_name = Murase.Create_File_Name(companyFormatList['name'], companyCode)
         print("ファイルの名前は"+file_name+"です")
