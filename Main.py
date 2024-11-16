@@ -58,7 +58,6 @@ class MHSystemGUI:
         
         # 会社判別
         companyCode = DistinctCompany.return_company_code(self.file_path)
-        
         # # 各社pdf読み込み　→　フォーマット合わせが目的
         companyFormatList =Higuchi.read_file(self.file_path,companyCode)
         # print(companyFormatList)
@@ -116,9 +115,9 @@ class MHSystemGUI:
             writer = csv.writer(file)
             # ヘッダーを追加（必要なら）
             writer.writerow(["差異のある日付"])
-        # `difference_days` を1行ずつ書き込む
-        for item in difference_days:
-            writer.writerow([item])
+            # `difference_days` を1行ずつ書き込む
+            for item in difference_days:
+                writer.writerow([item])
 
         print(f"差異データをCSVファイルとして保存しました: {create_file_path}")
 
