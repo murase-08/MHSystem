@@ -58,11 +58,10 @@ class MHSystemGUI:
         # 会社判別
         companyCode = DistinctCompany.return_company_code(self.file_path)
         
-        print('会社CD：',companyCode)
         # # 各社pdf読み込み　→　フォーマット合わせが目的
         companyFormatList =Higuchi.read_file(self.file_path,companyCode)
-        print(companyFormatList)
         
+        print("作業者の名前から対象のジョブカンファイルを探します。")
         # 下のファイルパスはパソコンに依存します
         directory_path = "C:\\Users\\user\\Desktop\\work_data\\jobkan_file\\"
         # 佐々木麻緒
@@ -76,16 +75,15 @@ class MHSystemGUI:
                 matching_files.append(filename)
         # 結果の表示
         if matching_files:
-            print("該当するファイル:")
             for file in matching_files:
-                print(file)
+                print("該当するファイルは  " + file + "  です。")
         # 正規表現パターンを作成
         pattern = re.compile(rf"{name_to_search}.*\.pdf")
         # ジョブカンファイルパスを取得
         jobkan_file_path = Murase.Call_Jobkan_Path() + file
         # ジョブカンファイル読み込み
         jobkanFormatList =Higuchi.read_file(jobkan_file_path,0)
-        print(jobkanFormatList)
+        # print(jobkanFormatList)
         
         conpany_workdays = companyFormatList['work_days']
         jobkan_workdays = jobkanFormatList['work_days']
@@ -94,20 +92,17 @@ class MHSystemGUI:
         company_data = pd.DataFrame(conpany_workdays)
         company_data = company_data.fillna("")
         jobkan_data = pd.DataFrame(jobkan_workdays)
-        print(company_data)
-        print(jobkan_data)
+        # print(company_data)
+        # print(jobkan_data)
         # 比較　完全一致比較 日ごとの実働時間で比較
         difference_days = Hayakawa.compare_working_hours(company_data, jobkan_data)
-        print("差異のある日付を出力")
-        print(difference_days)
-        
         # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
         file_name = Murase.Create_File_Name(companyFormatList['name'], companyCode)
-        
-        # 出力
-        Murase.output_csv()
+        print(file_name)
+        # # 出力
+        # Murase.output_csv()
         # ポップアップ出力（おわったよ。差異無いよ。三日分違うよ（9/10,9/11,9/12））
-        messagebox.showinfo(Murase.output_message(difference_days))
+        messagebox.showinfo("処理結果",Murase.Output_Message(difference_days))
 
 
 if __name__ == "__main__":

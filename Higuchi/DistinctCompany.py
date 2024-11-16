@@ -35,10 +35,10 @@ def return_company_code(file_path):
                                 print("これはジョブカンのPDFです")
                                 return 0
                             elif first_row[1] == "株式会社システムシェアード":
-                                print("これは株式会社システムシェアードのPDFです")
+                                print("システムシェアードのPDFが選択されました。")
                                 return 1
                             elif first_row[1] == "萩原北都テクノ株式会社":
-                                print("これはテクノクリエイティブのPDFです")
+                                print("萩原北都テクノ株式会社のPDFが選択されました。")
                                 return 2
                             elif (
                                 first_row[0] == "日\n付"
@@ -47,7 +47,7 @@ def return_company_code(file_path):
                                 and first_row[3] == "実働時間"
                                 and first_row[4] == "業務内容"
                             ):
-                                print("これはTDIシステムサービスのPDFです")
+                                print("TDIシステムサービスのPDFが選択されました。")
                                 return 3
                             elif (
                                 first_row[0] == "4月"
@@ -63,10 +63,10 @@ def return_company_code(file_path):
                                 and first_row[10] == "2月"
                                 and first_row[11] == "3月"
                             ):
-                                print("これはトーテックのPDFです")
+                                print("トーテックのPDFが選択されました。")
                                 return 4
                             elif third_row[0] == "株式会社システムサポート 御中":
-                                print("これはシステムサポートのPDFです")
+                                print("システムサポートのPDFが選択されました。")
                                 return 5
                             else:
                                 print("どの会社のPDFでもありません")
@@ -80,5 +80,5 @@ def return_company_code(file_path):
             and df.iloc[4, 4] == "③休憩時間"
             and df.iloc[4, 6] == "⑤超過/控除"
         ):
-            print("これはCECのExcelです")
+            print("CECのExcelが選択されました。")
             return 6
