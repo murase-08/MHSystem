@@ -4,9 +4,9 @@ import json
 # 処理完了メッセージ
 def Output_Message(difference_days):
     if not difference_days:  # 空のリストを判定
-            output_message = f"処理が完了しました。差異は0件です"
+            output_message = f"差異0件"
     else:
-            output_message = f"処理が完了しました。\n差異{len(difference_days)}件\n{difference_days}"
+            output_message = f"差異{len(difference_days)}件\n{difference_days}"
     return output_message
 
 # 時間を15分単位で切り捨てる
@@ -57,4 +57,4 @@ def Create_File_Name(name,companyCode):
     # 出向先_氏名_yyyyMMdd.pdf
     company_name = Call_Company_Name(companyCode)
     current_date = datetime.datetime.now().strftime("%Y%m%d")
-    return f"{company_name}_{name}_{current_date}.pdf"
+    return f"{company_name}_{name}_{current_date}.csv"

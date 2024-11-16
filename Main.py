@@ -7,6 +7,7 @@ from Hayakawa import Hayakawa
 import os
 import re
 import pandas as pd
+import csv
 
 class MHSystemGUI:
     def __init__(self, master):
@@ -62,9 +63,14 @@ class MHSystemGUI:
         companyFormatList =Higuchi.read_file(self.file_path,companyCode)
         
         print("作業者の名前から対象のジョブカンファイルを探します。")
-        # 下のファイルパスはパソコンに依存します
-        directory_path = "C:\\Users\\user\\Desktop\\work_data\\jobkan_file\\"
-        # 佐々木麻緒
+        # JSONファイルを開いてジョブカンファイルを読み込む
+        with open('Config.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            
+        # 樋口のローカルで実行するためのジョブカンファイルパス
+        directory_path = data["jobkan_file_path"]
+        
+        # companyFormatListから作業者の名前を探す
         name_to_search = companyFormatList['name']
         # 正規表現パターンを作成
         pattern = re.compile(rf"{name_to_search}.*\.pdf")
@@ -92,18 +98,25 @@ class MHSystemGUI:
         company_data = pd.DataFrame(conpany_workdays)
         company_data = company_data.fillna("")
         jobkan_data = pd.DataFrame(jobkan_workdays)
-        # print(company_data)
-        # print(jobkan_data)
+        
         # 比較　完全一致比較 日ごとの実働時間で比較
         difference_days = Hayakawa.compare_working_hours(company_data, jobkan_data)
         # ファイル名作成　（出向先_氏名_yyyyMMdd.csv）
+        
+        print("ファイルを作成します。")
         file_name = Murase.Create_File_Name(companyFormatList['name'], companyCode)
-        print(file_name)
-        # # 出力
-        # Murase.output_csv()
-        # ポップアップ出力（おわったよ。差異無いよ。三日分違うよ（9/10,9/11,9/12））
-        messagebox.showinfo("処理結果",Murase.Output_Message(difference_days))
+        print("ファイルの名前は"+file_name+"です")
+        create_file_path = f"{data['create_file_path']}{file_name}"
+        # CSVファイルとして保存
+        with open(create_file_path, mode='w', encoding='utf-8-sig', newline='') as file:
+            writer = csv.writer(file)
+            # ヘッダーを追加（必要なら）
+            writer.writerow(["差異のある日付"])
+        # `difference_days` を1行ずつ書き込む
+        for item in difference_days:
+            writer.writerow([item])
 
+        print(f"差異データをCSVファイルとして保存しました: {create_file_path}")
 
 if __name__ == "__main__":
     # Tkinterのメインウィンドウを作成
