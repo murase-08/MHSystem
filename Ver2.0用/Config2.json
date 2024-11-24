@@ -1,0 +1,12 @@
+{
+    "company_code": {
+        "SYSTEM_SHARED": 1,
+        "TDI_SYSTEM": 2,
+        "SYSTEM_SUPPORT": 3,
+        "ITCROSS": 4,
+        "TECCNO_CREATIVE": 5,
+        "KOKYO_SYSTEM": 6,
+        "CEC": 7
+    },
+    "jobkan_file_path": "/Users/yuri23/Desktop/jobkan/"
+}
