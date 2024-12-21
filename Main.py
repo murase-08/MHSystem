@@ -64,7 +64,7 @@ class MHSystemGUI:
         
         print("作業者の名前から対象のジョブカンファイルを探します。")
         # JSONファイルを開いてジョブカンファイルを読み込む
-        with open('Config.json', 'r', encoding='utf-8') as file:
+        with open('C:/Users/user/Documents/MHSystem/Config.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
         directory_path = data["jobkan_file_path"]
         

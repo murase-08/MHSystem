@@ -31,6 +31,7 @@ def detect_text_using_vision_api(image_path):
             if text.description == "曜日":  # '5/1' を特定
                 # 最初の頂点のy座標を取得
                 y_coordinates = vertices[0][1]
+                print("以下はシステムサポートのy_cordinatesの値です。")
                 print(f"05/01の座標: {y_coordinates}")
                 break 
     else:
@@ -137,7 +138,7 @@ def process_pdf_for_table(pdf_path):
 # メイン処理
 def main():
     # PDFファイルのパス
-    pdf_path = '/Users/yuri23/Downloads/システムサポート.pdf'  
+    pdf_path = 'C:/Users/user/Desktop/work_data/木佐貫大地_システムサポート.pdf'
     process_pdf_for_table(pdf_path)
 
 if __name__ == '__main__':

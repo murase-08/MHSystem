@@ -81,7 +81,6 @@ def detect_and_pair_date_time_text(image_path):
                         # 新しい時間をtext1の座標でペアリングリストに追加
                         updated_times.append({"text": new_time, "y1": text1['y1'], "x1": text1['x1']})
                         #print(f"ペア作成成功: {text1['text']} と {text2['text']} -> {new_time}")
-
             # 日付と新しい時間のペアリング
             for date_text in text_data:
                 if re.match(date_pattern, date_text['text']):
@@ -90,11 +89,10 @@ def detect_and_pair_date_time_text(image_path):
                             paired_texts.append((date_text['text'], time_text['text']))
                             #print(f"ペア作成成功: {date_text['text']} と {time_text['text']}")
 
-            # ペアを表示
-            print("\nペアになったテキスト:")
-            for pair in paired_texts:
-                print(f"{pair[0]:<15} - {pair[1]:<15}")
-
+            # # ペアを表示
+            # print("\nペアになったテキスト:")
+            # for pair in paired_texts:
+            #     print(f"{pair[0]:<15} - {pair[1]:<15}")
         else:
             print("テキストが検出されませんでした。")
             return ""
@@ -105,13 +103,13 @@ def detect_and_pair_date_time_text(image_path):
     except FileNotFoundError:
         print(f"指定されたファイルが見つかりません: {image_path}")
         return ""
-
+    print(paired_texts)
     return paired_texts  
 
 # メイン処理
 if __name__ == "__main__":
     # 画像のパス
     image_path = '/Users/yuri23/ocr_project/debug_images/page5_1_threshold.png'
-
+    image_path = 'C:/Users/user/debug_images/page5_1_threshold.png'
     # 抽出処理を実行
     detect_and_pair_date_time_text(image_path)

@@ -46,13 +46,11 @@ def detect_and_pair_date_time_text(image_path):
                         "y2": y2
                     })
                     #print(f"テキスト: '{detected_text}', 座標: 左上({x1}, {y1}), 右下({x2}, {y2})")
-
             # 高さ順にテキストをソート
             text_data.sort(key=lambda t: t['y1'])
             tolerance = 10 
             paired_texts = []
             unpaired_texts = []
-
             # ペアリング
             for i in range(len(text_data) - 1):
                 text1 = text_data[i]
@@ -72,14 +70,13 @@ def detect_and_pair_date_time_text(image_path):
                 else:
                     # ペアにできなかったテキストを追加（デバッグ用）
                     unpaired_texts.append((text1['text'], text2['text'], text1['y1'], text2['y1']))
-
-            # ペアを表示
-            print("ペアになったテキスト:")
-            if paired_texts:
-                for pair in paired_texts:
-                    print(f"{pair[0]:<15} - {pair[1]:<15}")
-            else:
-                print("ペアが作成されませんでした。")
+            # # ペアを表示
+            # print("ペアになったテキスト:")
+            # if paired_texts:
+            #     for pair in paired_texts:
+            #         print(f"{pair[0]:<15} - {pair[1]:<15}")
+            # else:
+            #     print("ペアが作成されませんでした。")
 
         else:
             print("テキストが検出されませんでした。")
@@ -91,14 +88,14 @@ def detect_and_pair_date_time_text(image_path):
     except FileNotFoundError:
         print(f"指定されたファイルが見つかりません: {image_path}")
         return ""
-
+    print(paired_texts)
     return paired_texts 
-
 
 # メイン処理
 if __name__ == "__main__":
     # 画像のパス
-    image_path = '/Users/yuri23/ocr_project/debug_images/page4_1_threshold.png'
+    # image_path = '/Users/yuri23/ocr_project/debug_images/page4_1_threshold.png'
+    image_path = 'C:/Users/user/debug_images/page4_1_threshold.png'
 
     # 抽出処理を実行
     detect_and_pair_date_time_text(image_path)

@@ -1,8 +1,8 @@
-import google_vision_ocr1
-import google_vision_ocr2 
-import google_vision_ocr3
-import google_vision_ocr4
-import google_vision_ocr5
+from google_vision_ocr import google_vision_ocr1
+from google_vision_ocr import google_vision_ocr2
+from google_vision_ocr import google_vision_ocr3
+from google_vision_ocr import google_vision_ocr4
+from google_vision_ocr import google_vision_ocr5
 
 def compare_paired_texts(paired_texts1, paired_texts2):
     """2つのペアリストを比較し、違いを返す関数"""

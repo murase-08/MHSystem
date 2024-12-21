@@ -79,11 +79,11 @@ def detect_and_pair_date_time_text(image_path):
                     # ペアにできなかったテキストを追加（デバッグ用）
                     unpaired_texts.append((text1['text'], text2['text'], text1['y1'], text2['y1']))
 
-            # ペアを表示
-            print("ペアになったテキスト:")
-            if paired_texts:
-                for pair in paired_texts:
-                    print(f"{pair[0]:<15} - {pair[1]:<15}")
+            # # ペアを表示
+            # print("ペアになったテキスト:")
+            # if paired_texts:
+            #     for pair in paired_texts:
+            #         print(f"{pair[0]:<15} - {pair[1]:<15}")
             else:
                 print("ペアが作成されませんでした。")
 
@@ -97,7 +97,7 @@ def detect_and_pair_date_time_text(image_path):
     except FileNotFoundError:
         print(f"指定されたファイルが見つかりません: {image_path}")
         return ""
-
+    print(paired_texts)
     return paired_texts 
 
 
@@ -105,6 +105,7 @@ def detect_and_pair_date_time_text(image_path):
 if __name__ == "__main__":
     # 画像のパス
     image_path = '/Users/yuri23/ocr_project/debug_images/page3_1_threshold.png'
+    image_path = 'C:/Users/user/debug_images/page3_1_threshold.png'
 
     # 抽出処理を実行
     detect_and_pair_date_time_text(image_path)

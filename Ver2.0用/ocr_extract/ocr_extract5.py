@@ -32,6 +32,7 @@ def detect_text_using_vision_api(image_path):
             if text.description == "1":  # '1' を特定
                 # 最初の頂点のy座標を取得
                 y_coordinates = vertices[0][1]
+                print("以下はテクノクリエイティブのy_cordinatesの値です。")
                 print(f"05/01の座標: {y_coordinates}")
                 break
     else:
@@ -89,7 +90,6 @@ def trim_and_blackout_columns(image):
     
     # 指定した領域を黒く塗りつぶす
     image[y_start:y_end, x_start:x_end] = 0
-
     return image
 
 # PDFを画像に変換して処理する関数
@@ -137,7 +137,7 @@ def process_pdf_for_table(pdf_path):
 # メイン処理
 def main():
     # PDFファイルのパス
-    pdf_path = '/Users/yuri23/Downloads/テクノクリエイティブ.pdf'
+    pdf_path = 'C:/Users/user/Desktop/work_data/寺内_テクノクリエイティブ.pdf'
     process_pdf_for_table(pdf_path)
 
 if __name__ == '__main__':
