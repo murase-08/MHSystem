@@ -1,0 +1,8 @@
+{
+    "DEBUG": true,
+    "SECRET_KEY": "your_secret_key",
+    "root_path": "C:\\Users\\user\\Desktop\\work_data",
+    "db_path": "C:\\Users\\user\\Desktop\\mhsystemdb.sqlite3",
+    "vision_path":"C:\\Users\\user\\Downloads\\mhsystem-9787827c319a.json",
+    "font_path":"C:\\Users\\user\\Documents\\MHSystem\\MHSystem_Ver2.0\\backend\\app\\Noto_Sans_JP\\NotoSansJP-VariableFont_wght.ttf"
+}
