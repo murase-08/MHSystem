@@ -89,7 +89,7 @@ def detect_difference():
                 if gapData['gap_days']:
                     gapList.append(gapData)
                     false_days_str = ",".join(map(str, gapData['gap_days']))
-                    print("SQLが呼ばれました")
+                    # false_dataテーブルにデータを保存
                     dbconnect.add_false_data_table(year_month,
                                              customer_work_data['name'],
                                              company_code,

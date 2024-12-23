@@ -4,5 +4,28 @@
     "root_path": "C:\\Users\\user\\Desktop\\work_data",
     "db_path": "C:\\Users\\user\\Desktop\\mhsystemdb.sqlite3",
     "vision_path":"C:\\Users\\user\\Downloads\\mhsystem-9787827c319a.json",
-    "font_path":"C:\\Users\\user\\Documents\\MHSystem\\MHSystem_Ver2.0\\backend\\app\\Noto_Sans_JP\\NotoSansJP-VariableFont_wght.ttf"
+    "font_path":"C:\\Users\\user\\Documents\\MHSystem\\MHSystem_Ver2.0\\backend\\app\\Noto_Sans_JP\\NotoSansJP-VariableFont_wght.ttf",
+    "ocr_preprocess":{
+        "DPI":600,
+        "FILTER_STRENGTH":30,
+        "TEMPLATE_WINDOW_SIZE":7,
+        "SEARCH_WINDOW_SIZE": 21,
+        "CLIP_LIMIT":2.0,
+        "TILE_GRID_SIZE_WIDTH":8,
+        "TILE_GRID_SIZE_HEIGHT":8,
+        "BLACK":0,
+        "WHITE":255
+    },
+    "create_table_and_grid":{
+        "Y_TOLERANCE":50,
+        "X_TOLERANCE":25,
+        "FONT_SIZE":15,
+        "ROW_HEIGHT": 20,
+        "TOP_MARGIN": 50,
+        "COLUMN_WIDTH": 100,
+        "LEFT_MARGIN": 50,
+        "CELL_WIDTH": 100,
+        "CELL_HEIGHT": 20,
+        "BORDER_LINE":1
+    }
 }
