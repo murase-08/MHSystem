@@ -1,15 +1,34 @@
 import sqlite3
 from app.utils.config_loader import load_settings
 
-def connect_to_database(db_path):
-    try:
-        # SQLiteデータベースに接続
-        connection = sqlite3.connect(db_path)
-        print(f"成功: データベース '{db_path}' に接続できました。")
-    except sqlite3.Error as e:
-        print(f"エラー: データベースへの接続に失敗しました。{e}")
-    finally:
-        # 接続を閉じる
-        if 'connection' in locals():
-            connection.close()
-            print("接続を閉じました。")
+# 設定をロード
+settings = load_settings()
+
+def get_db_connection():
+    conn = sqlite3.connect(settings["db_path"])  # SQLiteデータベースに接続
+    conn.row_factory = sqlite3.Row        # 結果を辞書形式で返す
+    return conn
+
+# args:プレースホルダ（?）に挿入される値。
+def execute_query(query, args=(), fetchone=False, fetchall=False):
+    conn = get_db_connection()
+    # SQLクエリを実行するためのカーソルオブジェクトを取得します。
+    cursor = conn.cursor()
+    # クエリの実行
+    cursor.execute(query, args)
+    # データベースへの変更（INSERT, UPDATE, DELETE など）を確定します。
+    conn.commit()
+    result = None
+    if fetchone:
+        result = cursor.fetchone()
+    elif fetchall:
+        result = cursor.fetchall()
+    # データベース接続を閉じてリソースを解放。
+    conn.close()
+    return result
+
+# false_dataにデータを追加するSQL
+def add_false_data_table(check_year_month, name, company_id, file_name, false_days):
+    query = "INSERT OR REPLACE INTO false_data (check_year_month, name, company_id, file_name, false_days) VALUES (?, ?, ?, ?, ?)"
+    execute_query(query, args=(check_year_month, name, company_id, file_name, false_days))
+    

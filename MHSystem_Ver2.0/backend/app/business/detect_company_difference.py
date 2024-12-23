@@ -24,9 +24,6 @@ def detect_difference():
     # ルート勤怠ファイルパス（固定パス）
     root_path = settings["root_path"]
     try:
-        # DBアクセス確認
-        dbconnect.connect_to_database(settings["db_path"])
-        
         data = request.get_json()
         year_month = data.get('yearMonth', '')
         print(f"デバッグ用：リクエストされた年月: {year_month}")
@@ -87,9 +84,17 @@ def detect_difference():
                 gap_days = compare_work_data.compare_work_time(customer_work_data['work_days'], jobkan_work_data['work_days'])
                 customer_file_name = os.path.basename(plumber_can_read_pdf_file_path)
                 gapData = {'name': customer_work_data['name'], 'customer_file_name': customer_file_name, 'gap_days': gap_days}
+                print(gapData)
                 # 勤怠日に差異がある場合は gapList に追加
                 if gapData['gap_days']:
                     gapList.append(gapData)
+                    false_days_str = ",".join(map(str, gapData['gap_days']))
+                    print("SQLが呼ばれました")
+                    dbconnect.add_false_data_table(year_month,
+                                             customer_work_data['name'],
+                                             company_code,
+                                             customer_file_name,
+                                             false_days_str)
         else:
             print(f"対象外のファイル: {plumber_can_read_pdf_file_path}")
         # 勤怠差異情報を文字列にして返す
