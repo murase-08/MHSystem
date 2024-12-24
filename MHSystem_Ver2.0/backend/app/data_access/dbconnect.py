@@ -27,6 +27,7 @@ def execute_query(query, args=(), fetchone=False, fetchall=False):
     conn.close()
     return result
 
+# === SQL ===
 # false_dataにデータを追加するSQL
 def add_false_data_table(check_year_month, name, company_id, file_name, false_days):
     query = "INSERT OR REPLACE INTO false_data (check_year_month, name, company_id, file_name, false_days) VALUES (?, ?, ?, ?, ?)"

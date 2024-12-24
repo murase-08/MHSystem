@@ -8,6 +8,13 @@ function DifferenceDetection() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // 対象年月が未選択の場合
+    if (!yearMonth) {
+      setResult('対象年月を選択してください。'); // エラーメッセージを設定
+      return; // 処理を中断
+    }
+    
     setIsProcessing(true); // ボタンを非活性化
     setResult('差異検出中...'); // 処理中の表示
     try {

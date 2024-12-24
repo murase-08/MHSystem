@@ -84,6 +84,8 @@ def detect_difference():
                 gap_days = compare_work_data.compare_work_time(customer_work_data['work_days'], jobkan_work_data['work_days'])
                 customer_file_name = os.path.basename(plumber_can_read_pdf_file_path)
                 gapData = {'name': customer_work_data['name'], 'customer_file_name': customer_file_name, 'gap_days': gap_days}
+                print("plumber_can_read_pdf_file_path"+plumber_can_read_pdf_file_path)
+                print("specific_jobkan_file_path"+specific_jobkan_file_path)
                 print(gapData)
                 # 勤怠日に差異がある場合は gapList に追加
                 if gapData['gap_days']:
@@ -95,8 +97,6 @@ def detect_difference():
                                              company_code,
                                              customer_file_name,
                                              false_days_str)
-        else:
-            print(f"対象外のファイル: {plumber_can_read_pdf_file_path}")
         # 勤怠差異情報を文字列にして返す
         return create_message.generate_difference_report(gapList)
         

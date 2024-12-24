@@ -11,7 +11,7 @@ from app.utils.config_loader import load_settings
 settings = load_settings()
 # 環境変数を直接指定
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = settings["vision_path"]
-# setting.jsonからデータを取り出す
+# setting.jsonから定数データを取り出す
 FILTER_STRENGTH         = settings["ocr_preprocess"]["FILTER_STRENGTH"]
 TEMPLATE_WINDOW_SIZE    = settings["ocr_preprocess"]["TEMPLATE_WINDOW_SIZE"]
 SEARCH_WINDOW_SIZE      = settings["ocr_preprocess"]["SEARCH_WINDOW_SIZE"]
