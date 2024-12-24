@@ -172,4 +172,3 @@ def create_pdf_with_table_structure_and_grid(text_data, processed_images,custome
     # 新しいPDFを出力
     pdf.output(output_pdf_path)
     print(f" {output_pdf_path}というPDFが生成されました")
-    
