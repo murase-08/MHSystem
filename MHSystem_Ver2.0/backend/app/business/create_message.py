@@ -20,7 +20,7 @@ def generate_difference_report(data):
             result.append("")  # 改行用
             result.append(f"ファイル名：{file_name}")
             result.append(f"従業員名  ：{employee_name}")
-            result.append(f"差異日    ：{gap_days_str}")
+            result.append(f"差異情報  ：{gap_days_str}")
             result.append("")  # 改行用
 
     # 最後のメッセージを追加

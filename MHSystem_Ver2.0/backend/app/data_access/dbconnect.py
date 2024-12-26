@@ -33,3 +33,12 @@ def add_false_data_table(check_year_month, name, company_id, file_name, false_da
     query = "INSERT OR REPLACE INTO false_data (check_year_month, name, company_id, file_name, false_days) VALUES (?, ?, ?, ?, ?)"
     execute_query(query, args=(check_year_month, name, company_id, file_name, false_days))
     
+# false_dataにあるデータをすべて取得するSQL   
+def get_false_data_table():
+    # check_year_month TEXT
+    # name             TEXT
+    # file_name        TEXT
+    # false_days       TEXT
+    query = "SELECT check_year_month, name, file_name, false_days FROM false_data"
+    false_datas = execute_query(query, fetchall=True)
+    return false_datas

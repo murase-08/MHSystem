@@ -1,40 +1,50 @@
-import React from 'react';
-import DifferenceItem from './DifferenceItem';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function DifferenceList() {
-  const differences = [
-    // {
-    //   yearMonth: '2024年11月',
-    //   fileName: 'トーテック勤怠表.pdf',
-    //   name: '佐々木',
-    //   dates: ['11/02', '11/03', '11/04'],
-    // },
-    // {
-    //   yearMonth: '2024年10月',
-    //   fileName: '勤怠表.pdf',
-    //   name: '佐藤',
-    //   dates: ['10/12', '10/13', '10/14'],
-    // },
-    // {
-    //   yearMonth: '2024年9月',
-    //   fileName: '勤怠表.pdf',
-    //   name: '佐藤',
-    //   dates: ['9/12', '9/13', '9/14'],
-    // },
-    // {
-    //   yearMonth: '2024年8月',
-    //   fileName: '勤怠表.pdf',
-    //   name: '佐藤',
-    //   dates: ['8/12', '8/13', '8/14'],
-    // },
-  ];
-  
+  // ステートを作成
+  const [differences, setDifferences] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // APIを呼び出してデータを取得
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/api/false-data');
+        setDifferences(response.data.differences);
+      } catch (error) {
+        console.error('データの取得中にエラーが発生しました:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // ローディング中の表示
+  if (loading) {
+    return <p>データを読み込み中...</p>;
+  }
+
   return (
     <main>
       <h2>差異一覧</h2>
-      {differences.map((diff, index) => (
-        <DifferenceItem key={index} {...diff} />
-      ))}
+      {differences.length === 0 ? (
+        <p>差異データがありません。</p>
+      ) : (
+        differences.map((diff, index) => (
+          <div
+            key={index}
+            style={{ border: '1px solid #ddd', padding: '10px', marginBottom: '10px' }}
+          >
+            <h3>{diff.yearMonth}</h3>
+            <p>ファイル名: {diff.fileName}</p>
+            <p>従業員名: {diff.name}</p>
+            <p>差異日: {diff.dates}</p>
+          </div>
+        ))
+      )}
     </main>
   );
 }

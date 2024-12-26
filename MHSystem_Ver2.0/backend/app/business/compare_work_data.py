@@ -21,11 +21,13 @@ def compare_work_time(customer_work_days, jobkan_work_days):
 
     # 日付の数をチェック
     if len(customer_work_days) != len(jobkan_work_days):
-        return "Number of days mismatch"
-
-    # 日付と worktime の比較
-    for customer, jobkan in zip(customer_work_days, jobkan_work_days):
-        if customer['day'] != jobkan['day'] or customer['worktime'] != jobkan['worktime']:
-            gap_days.append(customer['day'])
-
-    return gap_days
+        print("日付の数が一致しません。")
+        gap_days.append('勤怠表とジョブカンの日付の数があってないのでファイルを確認してください。')
+        return gap_days
+    else:
+        # 日付と worktime の比較
+        for customer, jobkan in zip(customer_work_days, jobkan_work_days):
+            if customer['day'] != jobkan['day'] or customer['worktime'] != jobkan['worktime']:
+                gap_days.append(customer['day'])
+        return gap_days
+    

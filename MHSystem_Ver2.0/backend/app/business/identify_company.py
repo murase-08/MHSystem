@@ -31,6 +31,10 @@ def return_company_code(file_path):
             elif tables[0][0] == ['', '①作業開始時刻', '②作業終了時刻', '③休憩時間', '④作業時間\n②-①-③', '⑤超過/控除']:
                 print("これはCECです")
                 return 6
+            # NTPシステム
+            elif texts and re.search(r'NTPシステム株式会社', texts):
+                print("これはNTPシステムです")
+                return 8
             # トランコムTIS
             elif tables[0][4] == ['日', '曜', '日', '勤', '怠', '時刻', '始業', '時刻', '終業', '通常', '休憩', 
                                   '深夜', '勤務', '時間', '計', '標準', '時間', '残業', '平日', '深夜', '平日', 
@@ -38,5 +42,5 @@ def return_company_code(file_path):
                 print("これはトランコムTISです")
                 return 7
             else:
-                print("このファイルが何のファイルかわかりません")
+                print("会社名を特定できません。")
                 return -1

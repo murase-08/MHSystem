@@ -9,6 +9,7 @@ from app.business.extract_company_work_data import totec
 from app.business.extract_company_work_data import systemsupport
 from app.business.extract_company_work_data import cec
 from app.business.extract_company_work_data import trancomtis
+from app.business.extract_company_work_data import ntpsystem
 from app.business import excel_to_pdf
 from app.business import ocr_to_pdf
 from app.business import identify_company
@@ -68,19 +69,27 @@ def detect_difference():
             4: totec.read_totec_file,
             5: systemsupport.read_systemsupport_file,
             6: cec.read_cec_file,
-            7: trancomtis.read_trancomTIS_file
+            7: trancomtis.read_trancomTIS_file,
+            8: ntpsystem.read_ntpsystem_file
         }
         # gapDataの配列を格納するためのgapList定義する
         gapList = []
         # 顧客勤怠とジョブカン勤怠を比べて差異があるものだけ保存
         for plumber_can_read_pdf_file_path in plumber_can_read_pdf_files_path:
             company_code = identify_company.return_company_code(plumber_can_read_pdf_file_path)
+            print(company_code)
             process_function = company_functions.get(company_code)
 
             if process_function:
+                # デバッグ用データ
+                # customer_work_data = {'name': '佐々木麻緒', 'work_days': [{'day': '2024-05-01', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': ''}]}
+                # jobkan_work_data = {'name': '佐々木麻緒', 'work_days': [{'day': '2024-05-01', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': None}, {'day': '2024-05-02', 'worktime': '08:15', 'starttime': '08:45', 'endtime': '18:00', 'resttime': '01:00', 'note': None}]}
+                
                 customer_work_data = process_function(plumber_can_read_pdf_file_path)
                 specific_jobkan_file_path = util.find_file_with_name(jobkan_file_path, customer_work_data['name'])
                 jobkan_work_data = jobkan.read_jobkan_file(specific_jobkan_file_path)
+                
+                
                 gap_days = compare_work_data.compare_work_time(customer_work_data['work_days'], jobkan_work_data['work_days'])
                 customer_file_name = os.path.basename(plumber_can_read_pdf_file_path)
                 gapData = {'name': customer_work_data['name'], 'customer_file_name': customer_file_name, 'gap_days': gap_days}
