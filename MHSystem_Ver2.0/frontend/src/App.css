@@ -114,3 +114,51 @@ button:hover {
   color: #666;
   cursor: not-allowed;
 }
+
+/* 差異リストのアイテム */
+.difference-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 差異リストのアイテムのテキスト */
+.difference-item h3,
+.difference-item p {
+  margin: 0 10px;
+}
+
+/* フィルタリングフォーム */
+.filter-form {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-form label {
+  font-weight: bold;
+}
+
+.filter-form input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px; 
+}
+
+/* ローディングメッセージ */
+.loading-message {
+  font-size: 18px;
+  font-weight: bold;
+  color: #888;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* 条件に一致しない場合のメッセージ */
+.no-results {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  text-align: center;
+  margin-top: 20px;
+}

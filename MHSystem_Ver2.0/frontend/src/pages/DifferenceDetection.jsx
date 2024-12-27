@@ -19,6 +19,7 @@ function DifferenceDetection() {
     setResult('差異検出中...'); // 処理中の表示
     try {
       const response = await axios.post('http://127.0.0.1:5000/api/detect', {
+        // リクエストボディとして yearMonth を送信
         yearMonth: yearMonth,
       });
       console.log("接続に成功しました！");
